@@ -1,0 +1,10 @@
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_0*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_1*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_2*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_3*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_4*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_5*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_6*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_7*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_8*.ar
+chime_convert_and_tfzap.psh -e zap -O data data/CHIME_J2302+4442_beam_9*.ar

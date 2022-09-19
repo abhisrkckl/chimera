@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --account=def-istairs
+#SBATCH --cpus-per-task=1
+#SBATCH --time=10:00:00
+#SBATCH --mem=64G     # Total memory for all tasks
+#SBATCH --job-name=J2302_wb_toas
+#SBATCH --output=%x-%j.out
+#SBATCH --error=%x-%j.err
+ 
+ 
+module use /project/6004902/files
+ 
+module load chime-psr
+module load PulsePortraiture
+module load psrchive
+ 
+
+/home/gagazie/scratch/chime_wb/pptoas.py -d auto_zap_J2302.meta -m J2302+4442-fit.spl --DM=13.71907408150567 --snr_cut=10.0 -T -o J2302_auto_zap.tim

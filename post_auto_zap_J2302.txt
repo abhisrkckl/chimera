@@ -1,0 +1,10 @@
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_0_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_1_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_2_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_3_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_4_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_5_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_6_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_7_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_8_*.ftscr
+paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap data/CHIME_J2302+4442_beam_9_*.ftscr

@@ -1,0 +1,10 @@
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_0_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_1_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_2_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_3_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_4_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_5_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_6_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_7_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_8_*.zap
+pam -e ftscr -u data/ --setnchn 64 --setnsub 1 -d 13.71907408150567 data/CHIME_J2302+4442_beam_9_*.zap

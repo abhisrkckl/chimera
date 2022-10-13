@@ -22,30 +22,40 @@ class Session:
         self.psrname = args[2]
         self.dm = float(args[3])
         self.model_portrait = args[4]
+        self.test_mode = True
         #meta_file = args[5]
         #pzap_file = args[4]
-
     
         self.datafile_glob_prefix = f"CHIME_{self.psrname}_beam_?_?????_?????"
 
+def run_cmd(cmd, test_mode):
+    try:
+        log.info(zap_cmd)
+        if not test_mode:
+            p = subprocess.Popen(cmd, shell=True)
+            p.wait()
+    except:
+        raise OSError("Error while executing command.\ncmd :: "+cmd)
+
 session = Session(sys.argv)
+
 
 #Run psrsh in a loop to avoid memory issues
 input_ar_files = glob.glob(f"{session.input_dir}/{session.datafile_glob_prefix}.ar")
 for ar_file in input_ar_files:
     zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
-    log.info(zap_cmd)
+    run_cmd(zap_cmd, session.test_mode)
     #os.system(zap_cmd)
 
 
 #Command to scrunch to 64 frequency channels
 scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn 64 --setnsub 1 -d {session.dm} {session.output_dir}/{session.datafile_glob_prefix}.zap"
-log.info(scr_cmd)
+run_cmd(scr_cmd, session.test_mode)
 #os.system(scr_cmd)
 
 #Post scrunching zapping. Will need to be unique per source
 pzap_cmd = f'paz -z "17 36 15 7 2 0 1 5 47 40 34" -e pzap -O {session.output_dir} {session.output_dir}/{session.datafile_glob_prefix}.ftscr'
-log.info(pzap_cmd)
+run_cmd(pzap_cmd, session.test_mode)
 #os.system(pzap_cmd)
 
 

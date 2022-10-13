@@ -2,7 +2,6 @@
 
 import glob
 import os
-import sys
 from astropy import log
 from pplib import *
 import pptoas as ppt
@@ -97,10 +96,11 @@ def run_cmd(cmd: str, test_mode: bool):
 
 def create_metafile(session: Session, pulsar: PulsarConfig):
     """Make a metafile of the fully zapped and scrunched files"""
-    pzap_files = glob.glob(f"{session.output_dir}/{pulsar.datafile_glob_prefix}.pzap")
 
+    pzap_files = glob.glob(f"{session.output_dir}/{pulsar.datafile_glob_prefix}.pzap")
     meta_file = f"{session.output_dir}/{pulsar.name}.meta"
 
+    log.info(f"Creating meta file {meta_file}.")
     with open(meta_file, "w") as metafile:
         for pzap_file in pzap_files:
             metafile.write(f"{pzap_file}\n")
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     session = Session()
 
     for pulsar in session.pulsars:
-        log.info(f"Processing {pulsar.name}...")
+        log.info(f"### Processing {pulsar.name} ###")
 
         # Run psrsh in a loop to avoid memory issues
         input_ar_files = glob.glob(
@@ -121,6 +121,8 @@ if __name__ == "__main__":
         )
         for ar_file in input_ar_files:
             prefix = os.path.splitext(os.path.basename(ar_file))[0]
+
+            log.info(f"--- Processing {prefix} ---")
 
             zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {session.input_dir}/{prefix}.ar"
             run_cmd(zap_cmd, session.test_mode)

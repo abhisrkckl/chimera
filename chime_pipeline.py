@@ -30,13 +30,14 @@ class Session:
         self.datafile_glob_prefix = f"CHIME_{self.psrname}_beam_?_?????_?????"
 
 def run_cmd(cmd, test_mode):
+    """Run a shell command using Popen"""
     try:
         log.info(cmd)
         if not test_mode:
             p = subprocess.Popen(cmd, shell=True)
             p.wait()
     except:
-        raise OSError("Error while executing command.\ncmd :: "+cmd)
+        raise OSError(f"Error while executing command.\ncmd :: {cmd}")
 
 if __name__ == "__main__":
 

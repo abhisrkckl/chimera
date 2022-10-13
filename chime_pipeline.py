@@ -6,6 +6,7 @@ from astropy import log
 from pplib import *
 import pptoas as ppt
 import ppalign
+import subprocess
 
 log.setLevel("INFO")
 

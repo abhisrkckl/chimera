@@ -74,7 +74,7 @@ def create_metafile(session:Session, pulsar:PulsarConfig):
 
 if __name__ == "__main__":
 
-    session = Session(sys.argv)
+    session = Session()
 
     for pulsar in session.pulsars:
         log.info(f"Processing {pulsar.name}...")

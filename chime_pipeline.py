@@ -5,7 +5,6 @@ import os
 from astropy import log
 from pplib import *
 import pptoas as ppt
-import ppalign
 import subprocess
 import argparse
 import json
@@ -138,6 +137,5 @@ if __name__ == "__main__":
         # Make a metafile of the fully zapped and scrunched files
         meta_file = create_metafile(session, pulsar)
 
-        # print(meta_file)
-        # gt = ppt.GetTOAs(meta_file, session.model_portrait)
-        # gt.get_TOAs(DM0=session.dm)
+        gt = ppt.GetTOAs(meta_file, session.model_portrait)
+        gt.get_TOAs(DM0=session.dm)

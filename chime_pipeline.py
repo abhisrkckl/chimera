@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-from ast import parse
 import glob
 import os
-import getopt
 import sys
 from astropy import log
 from pplib import *

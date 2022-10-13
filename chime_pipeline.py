@@ -34,11 +34,7 @@ class Session:
         parser.add_argument("-c", "--config", required=True, help="Configuration file (JSON format).")
         parser.add_argument("-t", "--test", required=False, dest="test_mode", action="store_true", help="Run in test mode (don't execute commands, display only).")
         args = parser.parse_args()
-        
-        #cmdargs = sys.argv[1:]
-        #opts, args = getopt.gnu_getopt(cmdargs, "", [])
 
-        #Run this script as follows: python chime_pipeline.py "path to .ar files" "path were data products are to be stored" "psr jname" "post scrunch zapping file"
         self.input_dir = os.path.realpath(args.input_dir)
         self.output_dir = os.path.realpath(args.ouput_dir)
         self.config_file = os.path.realpath(args.config)

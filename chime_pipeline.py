@@ -1,3 +1,5 @@
+#!/usr/env python
+
 import glob
 import os
 import getopt
@@ -23,7 +25,7 @@ class Session:
         self.psrname = args[2]
         self.dm = float(args[3])
         self.model_portrait = args[4]
-        self.test_mode = False
+        self.test_mode = True
         #meta_file = args[5]
         #pzap_file = args[4]
     

@@ -25,14 +25,12 @@ model_portrait = args[4]
 
 datafile_glob_prefix = f"{output_dir}/CHIME_{psrname}_beam_?_?????_?????"
 
-"""
 #Run psrsh in a loop to avoid memory issues
 input_ar_files = glob.glob(f"{datafile_glob_prefix}.ar")
 for ar_file in input_ar_files:
     zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {output_dir} {ar_file}"
     log.info(zap_cmd)
-    os.system(zap_cmd)
-"""
+    #os.system(zap_cmd)
 
 
 #Command to scrunch to 64 frequency channels

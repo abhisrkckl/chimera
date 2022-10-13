@@ -1,4 +1,4 @@
-#!/usr/env python
+#!/usr/bin/env python
 
 import glob
 import os
@@ -25,7 +25,7 @@ class Session:
         self.psrname = args[2]
         self.dm = float(args[3])
         self.model_portrait = args[4]
-        self.test_mode = True
+        self.test_mode = False
         #meta_file = args[5]
         #pzap_file = args[4]
     

@@ -17,14 +17,14 @@ class PulsarConfig:
         self,
         name: str,
         dm: float,
-        model_portrit: str,
+        model_portrait: str,
         nchan: int,
         nsub: int,
         zap_chans: str,
     ):
         self.name = name
         self.dm = dm
-        self.model_portrit = model_portrit
+        self.model_portrait = model_portrait
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
@@ -110,7 +110,6 @@ def create_metafile(session: Session, pulsar: PulsarConfig):
 if __name__ == "__main__":
 
     session = Session()
-
     for pulsar in session.pulsars:
         log.info(f"### Processing {pulsar.name} ###")
 

@@ -137,5 +137,5 @@ if __name__ == "__main__":
         # Make a metafile of the fully zapped and scrunched files
         meta_file = create_metafile(session, pulsar)
 
-        gt = ppt.GetTOAs(meta_file, session.model_portrait)
+        gt = ppt.GetTOAs(meta_file, pulsar.model_portrait)
         gt.get_TOAs(DM0=session.dm)

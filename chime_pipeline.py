@@ -116,7 +116,7 @@ if __name__ == "__main__":
         # Run psrsh in a loop to avoid memory issues
         input_ar_files = glob.glob(
             f"{session.input_dir}/{pulsar.datafile_glob_prefix}.ar"
-        )
+        ) 
         for ar_file in input_ar_files:
             prefix = os.path.splitext(os.path.basename(ar_file))[0]
 
@@ -131,10 +131,14 @@ if __name__ == "__main__":
 
             # Post scrunching zapping. Will need to be unique per source
             pzap_cmd = f'paz -z "{pulsar.zap_chans}" -e pzap -O {session.output_dir} {session.output_dir}/{prefix}.ftscr'
-            run_cmd(pzap_cmd, session.test_mode)
+            run_cmd(pzap_cmd, session.test_mode) 
 
         # Make a metafile of the fully zapped and scrunched files
         meta_file = create_metafile(session, pulsar)
 
         gt = ppt.GetTOAs(meta_file, pulsar.model_portrait)
-        gt.get_TOAs(DM0=session.dm)
+        gt.get_TOAs(DM0=pulsar.dm)
+        #Writing to a tim file
+        timfile = f'{session.output_dir}/{pulsar.name}.tim' 
+        # There is an optional SNR_cutoff and way to append to an existing timfile
+        write_TOAs(gt.TOA_list, SNR_cutoff=0.0, outfile=timfile, append=False)

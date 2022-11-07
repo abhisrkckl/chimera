@@ -47,7 +47,7 @@ class Session:
         )
         parser.add_argument(
             "-o",
-            "--ouput_dir",
+            "--output_dir",
             required=True,
             help="Directory where output files will be stored.",
         )

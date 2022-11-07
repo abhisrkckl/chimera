@@ -20,6 +20,7 @@ class PulsarConfig:
         model_portrait: str,
         nchan: int,
         nsub: int,
+        beam_number: str,
         zap_chans: str,
     ):
         self.name = name
@@ -28,7 +29,8 @@ class PulsarConfig:
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
-        self.datafile_glob_prefix = f"CHIME_{self.name}_beam_?_?????_?????"
+        self.beam_number = beam_number
+        self.datafile_glob_prefix = f"CHIME_{self.name}_beam_{self.beam_number}_?????_?????"
 
 
 class Session:

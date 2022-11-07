@@ -5,6 +5,7 @@
         "model_portrait" : "J2302+4442-fit.spl",
         "nchan" : 64,
         "nsub" : 1,
+        "beam_number": 0,
         "zap_chans" : "17 36 15 7 2 0 1 5 47 40 34"
     }
 ]

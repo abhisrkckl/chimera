@@ -73,8 +73,8 @@ class Session:
 
     def process_config(self):
         with open(self.config_file, "r") as cf:
-            config_data = json.load(cf)
             try:
+                config_data = json.load(cf)
                 self.pulsars = [PulsarConfig(**psr_data) for psr_data in config_data]
             except:
                 raise AttributeError(

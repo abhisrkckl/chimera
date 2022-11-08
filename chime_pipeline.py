@@ -4,17 +4,16 @@ import os
 from glob import glob
 
 from astropy import log
-from pplib import write_TOAs
-from pptoas import GetTOAs
 
-from exec import create_exec_summary_file, create_metafile, run_cmd
+from exec import create_exec_summary_file, run_cmd
+from fileutils import get_file_prefix, get_final_output_file, get_input_ar_files
 from session import Session
+from toautils import create_tim_file
 from validation import test_input_file
 
-log.setLevel("INFO")
-
-
 if __name__ == "__main__":
+
+    log.setLevel("INFO")
 
     execution_summary = dict()
 
@@ -24,9 +23,7 @@ if __name__ == "__main__":
         log.info(f"### Processing {pulsar.name} ###")
 
         # Run psrsh in a loop to avoid memory issues
-        input_ar_files = glob(
-            f"{session.input_dir}/{pulsar.datafile_glob_prefix}.ar"
-        )
+        input_ar_files = get_input_ar_files(session, pulsar)
 
         execution_summary[pulsar.name] = {
             "num_files_total": len(input_ar_files),
@@ -35,10 +32,10 @@ if __name__ == "__main__":
         }
 
         for ar_file in input_ar_files:
-            prefix = os.path.splitext(os.path.basename(ar_file))[0]
+            prefix = get_file_prefix(ar_file)
 
             # Skip processing the file if it has already been processed.
-            final_output_file = f"{session.output_dir}/{prefix}.pzap"
+            final_output_file = get_final_output_file(session, prefix)
             if os.path.exists(final_output_file):
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
                 execution_summary[pulsar.name]["num_files_skip_exist"] += 1
@@ -92,14 +89,6 @@ if __name__ == "__main__":
 
             execution_summary[pulsar.name]["num_files_success"] += 1
 
-        # Make a metafile of the fully zapped and scrunched files
-        meta_file = create_metafile(session, pulsar)
-
-        gt = GetTOAs(meta_file, pulsar.model_portrait)
-        gt.get_TOAs(DM0=pulsar.dm)
-        # Writing to a tim file
-        timfile = f"{session.output_dir}/{pulsar.name}.tim"
-        # There is an optional SNR_cutoff and way to append to an existing timfile
-        write_TOAs(gt.TOA_list, SNR_cutoff=0.0, outfile=timfile, append=False)
+        create_tim_file(session, pulsar)
 
     create_exec_summary_file(session, execution_summary)

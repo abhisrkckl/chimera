@@ -1,6 +1,9 @@
 import argparse
 import json
 import os
+from glob import glob
+
+from astropy import log
 
 from validation import test_dir, test_input_file, test_read_dir
 
@@ -74,3 +77,16 @@ class Session:
                 raise AttributeError(
                     "The JSON config is malformed or missing attributes."
                 )
+
+    def create_metafile(self, pulsar: PulsarConfig):
+        """Make a metafile of the fully zapped and scrunched files"""
+
+        pzap_files = glob(f"{self.output_dir}/{pulsar.datafile_glob_prefix}.pzap")
+        meta_file = f"{self.output_dir}/{pulsar.name}.meta"
+
+        log.info(f"Creating meta file {meta_file}.")
+        with open(meta_file, "w") as metafile:
+            for pzap_file in pzap_files:
+                metafile.write(f"{pzap_file}\n")
+
+        self.meta_file = meta_file

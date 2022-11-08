@@ -33,7 +33,7 @@ def test_input_file(file_path, ok=True):
         raise OSError(f"{file_path} is not a file.")
     elif not os.access(file_path, os.R_OK):
         raise OSError(f"{file_path} not readable.")
-    else:
+    elif ok:
         log.info(f"File {file_path} OK. ")
 
     return file_path

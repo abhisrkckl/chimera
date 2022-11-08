@@ -92,7 +92,7 @@ def run_cmd(cmd: str, test_mode: bool):
             p = subprocess.Popen(cmd, shell=True)
             p.wait()
     except:
-        raise OSError(f"Error while executing command.\ncmd :: {cmd}")
+        log.error(f"Error while executing command.\ncmd :: {cmd}")
 
 
 def create_metafile(session: Session, pulsar: PulsarConfig):

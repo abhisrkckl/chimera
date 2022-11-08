@@ -87,7 +87,7 @@ class Session:
 def run_cmd(cmd: str, test_mode: bool):
     """Run a shell command using Popen"""
     try:
-        log.info(cmd)
+        log.info(f"RUN $ {cmd}")
         if not test_mode:
             p = subprocess.Popen(cmd, shell=True)
             p.wait()

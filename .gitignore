@@ -5,3 +5,9 @@
 *.out.txt
 *.err
 *.out
+*.ftscr
+*.zap
+*.meta
+*.pyc
+*.pzap
+*.tim

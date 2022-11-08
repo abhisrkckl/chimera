@@ -13,6 +13,7 @@ from session import PulsarConfig, Session
 
 log.setLevel("INFO")
 
+
 def run_cmd(cmd: str, test_mode: bool):
     """Run a shell command using Popen"""
     try:
@@ -40,10 +41,13 @@ def create_metafile(session: Session, pulsar: PulsarConfig):
 
     return meta_file
 
-def create_exec_summary_file(session: Session, exec_summary : dict):
+
+def create_exec_summary_file(session: Session, exec_summary: dict):
     """Create an execution summary file."""
     now_str = datetime.now().isoformat()
-    with open(f"{session.output_dir}/chime_pipeline_summary_{now_str}.json", 'w') as summary_file:
+    with open(
+        f"{session.output_dir}/chime_pipeline_summary_{now_str}.json", "w"
+    ) as summary_file:
         json.dump(exec_summary, summary_file)
 
 
@@ -62,9 +66,9 @@ if __name__ == "__main__":
         )
 
         execution_summary[pulsar.name] = {
-            "num_files_total" : len(input_ar_files),
-            "num_files_success" : 0,
-            "num_files_skip_exist" : 0
+            "num_files_total": len(input_ar_files),
+            "num_files_success": 0,
+            "num_files_skip_exist": 0,
         }
 
         for ar_file in input_ar_files:

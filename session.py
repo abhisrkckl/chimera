@@ -3,6 +3,7 @@ import os
 import json
 from tests import test_dir, test_input_file, test_read_dir
 
+
 class PulsarConfig:
     def __init__(
         self,

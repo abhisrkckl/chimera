@@ -2,12 +2,12 @@
 
 import glob
 import os
-from astropy import log
-from pplib import *
 import pptoas as ppt
 import subprocess
 import argparse
 import json
+from astropy import log
+from pplib import *
 from tests import test_dir, test_input_file, test_read_dir
 
 log.setLevel("INFO")
@@ -65,10 +65,10 @@ class Session:
         )
         args = parser.parse_args()
 
-        self.input_dir = test_read_dir( os.path.realpath(args.input_dir) )
-        self.output_dir = test_dir( os.path.realpath(args.output_dir) )
-        self.config_file = test_input_file( os.path.realpath(args.config) )
-        
+        self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
+        self.output_dir = test_dir(os.path.realpath(args.output_dir))
+        self.config_file = test_input_file(os.path.realpath(args.config))
+
         self.test_mode = args.test_mode
 
         self.process_config()
@@ -133,9 +133,11 @@ if __name__ == "__main__":
             try:
                 test_input_file(f"{session.input_dir}/{prefix}.ar")
             except OSError as err:
-                log.error(f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file.")
+                log.error(
+                    f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file."
+                )
                 continue
-            
+
             # CHIME preprocessing script
             zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {session.input_dir}/{prefix}.ar"
             run_cmd(zap_cmd, session.test_mode)
@@ -143,7 +145,9 @@ if __name__ == "__main__":
             try:
                 test_input_file(f"{session.output_dir}/{prefix}.zap")
             except OSError as err:
-                log.error(f"Error reading file {session.output_dir}/{prefix}.zap. Skipping file.")
+                log.error(
+                    f"Error reading file {session.output_dir}/{prefix}.zap. Skipping file."
+                )
                 continue
 
             # Command to scrunch to 64 frequency channels
@@ -151,9 +155,11 @@ if __name__ == "__main__":
             run_cmd(scr_cmd, session.test_mode)
 
             try:
-                test_input_file(f"{session.output_dir}/{prefix}.ftscr")  
+                test_input_file(f"{session.output_dir}/{prefix}.ftscr")
             except OSError as err:
-                log.error(f"Error reading file {session.output_dir}/{prefix}.ftscr. Skipping file.")
+                log.error(
+                    f"Error reading file {session.output_dir}/{prefix}.ftscr. Skipping file."
+                )
                 continue
 
             # Post scrunching zapping. Will need to be unique per source
@@ -161,9 +167,11 @@ if __name__ == "__main__":
             run_cmd(pzap_cmd, session.test_mode)
 
             try:
-                test_input_file(f"{session.output_dir}/{prefix}.pzap")  
+                test_input_file(f"{session.output_dir}/{prefix}.pzap")
             except OSError as err:
-                log.error(f"Error reading file {session.output_dir}/{prefix}.pzap. Skipping file.")
+                log.error(
+                    f"Error reading file {session.output_dir}/{prefix}.pzap. Skipping file."
+                )
                 continue
 
         # Make a metafile of the fully zapped and scrunched files

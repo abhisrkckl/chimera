@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import glob
 import os
+from glob import glob
 
 from astropy import log
 from pplib import write_TOAs
@@ -24,7 +24,7 @@ if __name__ == "__main__":
         log.info(f"### Processing {pulsar.name} ###")
 
         # Run psrsh in a loop to avoid memory issues
-        input_ar_files = glob.glob(
+        input_ar_files = glob(
             f"{session.input_dir}/{pulsar.datafile_glob_prefix}.ar"
         )
 

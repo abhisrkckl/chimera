@@ -120,6 +120,12 @@ if __name__ == "__main__":
         for ar_file in input_ar_files:
             prefix = os.path.splitext(os.path.basename(ar_file))[0]
 
+            # Skip processing the file if it has already been processed.
+            final_output_file = f"{session.output_dir}/{prefix}.pzap"
+            if os.path.exists(final_output_file):
+                log.info(f"--- Skipping {prefix} ... Output already exists. ---")
+                continue
+
             log.info(f"--- Processing {prefix} ---")
 
             zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {session.input_dir}/{prefix}.ar"

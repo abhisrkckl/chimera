@@ -42,6 +42,12 @@ class Session:
             help="Directory where input archives are stored.",
         )
         parser.add_argument(
+            "-m",
+            "--metafile",
+            required=False,
+            help="Meta file that lists the input archives (should be stored in input_dir).",
+        )
+        parser.add_argument(
             "-o",
             "--output_dir",
             required=True,
@@ -63,6 +69,16 @@ class Session:
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
         self.output_dir = test_dir(os.path.realpath(args.output_dir))
         self.config_file = test_input_file(os.path.realpath(args.config))
+        
+        if args.metafile is not None:
+            self.input_metafile = test_input_file(os.path.realpath(args.metafile))
+            with open(self.input_metafile, 'r') as metafile:
+                self.input_file_names = []
+                for f in metafile.readlines():
+                    f_full = test_input_file(f"{self.input_dir}/{f.strip()}")
+                    self.input_file_names.append(f_full)
+        else:
+            self.input_metafile = None
 
         self.test_mode = args.test_mode
 
@@ -78,15 +94,15 @@ class Session:
                     "The JSON config is malformed or missing attributes."
                 )
 
-    def create_metafile(self, pulsar: PulsarConfig):
+    def create_output_metafile(self, pulsar: PulsarConfig):
         """Make a metafile of the fully zapped and scrunched files"""
 
         pzap_files = glob(f"{self.output_dir}/{pulsar.datafile_glob_prefix}.pzap")
-        meta_file = f"{self.output_dir}/{pulsar.name}.meta"
+        output_meta_file = f"{self.output_dir}/{pulsar.name}.meta"
 
-        log.info(f"Creating meta file {meta_file}.")
-        with open(meta_file, "w") as metafile:
+        log.info(f"Creating meta file {output_meta_file}.")
+        with open(output_meta_file, "w") as metafile:
             for pzap_file in pzap_files:
                 metafile.write(f"{pzap_file}\n")
 
-        self.meta_file = meta_file
+        self.output_meta_file = output_meta_file

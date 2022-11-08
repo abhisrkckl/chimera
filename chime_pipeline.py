@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-from glob import glob
 
 from astropy import log
 
@@ -29,12 +28,21 @@ if __name__ == "__main__":
             "num_files_total": len(input_ar_files),
             "num_files_success": 0,
             "num_files_skip_exist": 0,
+            "num_files_skip_meta": 0,
         }
 
         for ar_file in input_ar_files:
             prefix = get_file_prefix(ar_file)
 
-            # Skip processing the file if it has already been processed.
+            # Skip the file if it is not in the input metafile (if input metafile is given).
+            if session.input_metafile is not None:
+                print(session.input_file_names)
+                if ar_file not in session.input_file_names:
+                    log.info(f"--- Skipping {prefix} ... Not incuded in the input metafile. ---")
+                    execution_summary[pulsar.name]["num_files_skip_meta"] += 1
+                    continue
+
+            # Skip the file if it has already been processed.
             final_output_file = get_final_output_file(session, prefix)
             if os.path.exists(final_output_file) and os.path.isfile(final_output_file):
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
@@ -44,7 +52,7 @@ if __name__ == "__main__":
             log.info(f"--- Processing {prefix} ---")
 
             try:
-                test_input_file(f"{session.input_dir}/{prefix}.ar")
+                test_input_file(f"{ar_file}")
             except OSError as err:
                 log.error(
                     f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file."
@@ -89,6 +97,9 @@ if __name__ == "__main__":
 
             execution_summary[pulsar.name]["num_files_success"] += 1
 
-        create_tim_file(session, pulsar)
+        if execution_summary[pulsar.name]["num_files_success"] > 0:
+            create_tim_file(session, pulsar)
+        else:
+            log.warning("Skipping TOA file creation as no new files were processed.")
 
     create_exec_summary_file(session, execution_summary)

@@ -52,7 +52,7 @@ if __name__ == "__main__":
             log.info(f"--- Processing {prefix} ---")
 
             try:
-                test_input_file(f"ar_file")
+                test_input_file(f"{ar_file}")
             except OSError as err:
                 log.error(
                     f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file."

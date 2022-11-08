@@ -100,8 +100,16 @@ if __name__ == "__main__":
             execution_summary[pulsar.name]["num_files_success"] += 1
 
         if execution_summary[pulsar.name]["num_files_success"] > 0:
-            create_tim_file(session, pulsar)
+            try:
+                create_tim_file(session, pulsar)
+                execution_summary[pulsar.name]["toa_file_created"] = True
+            except Exception as err:
+                log.error(f"Failed to create TOA file for {pulsar.name}.")
+                log.error(err)
+                execution_summary[pulsar.name]["toa_file_created"] = False
+                continue
         else:
             log.warning("Skipping TOA file creation as no new files were processed.")
+            execution_summary[pulsar.name]["toa_file_created"] = False
 
     create_exec_summary_file(session, execution_summary)

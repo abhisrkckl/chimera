@@ -9,6 +9,7 @@ import json
 from astropy import log
 from pplib import *
 from tests import test_dir, test_input_file, test_read_dir
+from datetime import datetime
 
 log.setLevel("INFO")
 
@@ -87,7 +88,7 @@ class Session:
 def run_cmd(cmd: str, test_mode: bool):
     """Run a shell command using Popen"""
     try:
-        log.info(cmd)
+        log.info(f"RUN $ {cmd}")
         if not test_mode:
             p = subprocess.Popen(cmd, shell=True)
             p.wait()
@@ -111,17 +112,33 @@ def create_metafile(session: Session, pulsar: PulsarConfig):
 
     return meta_file
 
+def create_exec_summary_file(session: Session, exec_summary : dict):
+    """Create an execution summary file."""
+    now_str = datetime.now().isoformat()
+    with open(f"{session.output_dir}/chime_pipeline_summary_{now_str}.json", 'w') as summary_file:
+        json.dump(exec_summary, summary_file)
+
 
 if __name__ == "__main__":
 
+    execution_summary = dict()
+
     session = Session()
     for pulsar in session.pulsars:
+
         log.info(f"### Processing {pulsar.name} ###")
 
         # Run psrsh in a loop to avoid memory issues
         input_ar_files = glob.glob(
             f"{session.input_dir}/{pulsar.datafile_glob_prefix}.ar"
         )
+
+        execution_summary[pulsar.name] = {
+            "num_files_total" : len(input_ar_files),
+            "num_files_success" : 0,
+            "num_files_skip_exist" : 0
+        }
+
         for ar_file in input_ar_files:
             prefix = os.path.splitext(os.path.basename(ar_file))[0]
 
@@ -129,6 +146,7 @@ if __name__ == "__main__":
             final_output_file = f"{session.output_dir}/{prefix}.pzap"
             if os.path.exists(final_output_file):
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
+                execution_summary[pulsar.name]["num_files_skip_exist"] += 1
                 continue
 
             log.info(f"--- Processing {prefix} ---")
@@ -177,6 +195,8 @@ if __name__ == "__main__":
                 )
                 continue
 
+            execution_summary[pulsar.name]["num_files_success"] += 1
+
         # Make a metafile of the fully zapped and scrunched files
         meta_file = create_metafile(session, pulsar)
 
@@ -186,3 +206,5 @@ if __name__ == "__main__":
         timfile = f"{session.output_dir}/{pulsar.name}.tim"
         # There is an optional SNR_cutoff and way to append to an existing timfile
         write_TOAs(gt.TOA_list, SNR_cutoff=0.0, outfile=timfile, append=False)
+
+    create_exec_summary_file(session, execution_summary)

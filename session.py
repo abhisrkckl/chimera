@@ -42,7 +42,7 @@ class Session:
             help="Directory where input archives are stored.",
         )
         parser.add_argument(
-            "-i",
+            "-m",
             "--metafile",
             required=False,
             help="Meta file that lists the input archives (should be stored in input_dir).",

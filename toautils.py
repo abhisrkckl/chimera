@@ -6,9 +6,9 @@ from session import PulsarConfig, Session
 
 def create_tim_file(session: Session, pulsar: PulsarConfig):
     # Make a metafile of the fully zapped and scrunched files
-    session.create_metafile(pulsar)
+    session.create_output_metafile(pulsar)
 
-    gt = GetTOAs(session.meta_file, pulsar.model_portrait)
+    gt = GetTOAs(session.output_meta_file, pulsar.model_portrait)
     gt.get_TOAs(DM0=pulsar.dm)
     # Writing to a tim file
     timfile = f"{session.output_dir}/{pulsar.name}.tim"

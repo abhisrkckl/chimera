@@ -9,7 +9,7 @@ def test_read_dir(folder, ok=True):
     elif not os.access(folder, os.R_OK):
         raise OSError(f"{folder} not readable.")
     elif ok:
-        logger.log(f"Directory {folder} OK. ")
+        logger.info(f"Directory {folder} OK. ")
     
     return folder
 
@@ -18,18 +18,18 @@ def test_dir(folder, ok=True):
     if not os.access(folder, os.W_OK):
         raise OSError(f"{folder} not writable.")
     elif ok:
-        logger.log(f"Directory {folder} OK. ")
+        logger.info(f"Directory {folder} OK. ")
     
     return folder
 
 def test_input_file(file_path, ok=True):
     if not os.access(file_path, os.F_OK):
-        logger.log(f"{file_path} does not exist.")
+        raise OSError(f"{file_path} does not exist.")
     elif not os.path.isfile(file_path):
-        logger.log(f"{file_path} is not a file.")
+        raise OSError(f"{file_path} is not a file.")
     elif not os.access(file_path, os.R_OK):
-        logger.log(f"{file_path} not readable.")
+        raise OSError(f"{file_path} not readable.")
     else:
-        logger.log(f"Input file {file_path} OK. ")
+        logger.info(f"Input file {file_path} OK. ")
     
     return file_path

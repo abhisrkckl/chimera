@@ -8,7 +8,7 @@ import json
 from astropy import log
 from pplib import *
 from datetime import datetime
-from tests import test_input_file
+from validation import test_input_file
 from session import PulsarConfig, Session
 
 log.setLevel("INFO")

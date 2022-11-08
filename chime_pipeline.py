@@ -38,7 +38,9 @@ if __name__ == "__main__":
             if session.input_metafile is not None:
                 print(session.input_file_names)
                 if ar_file not in session.input_file_names:
-                    log.info(f"--- Skipping {prefix} ... Not incuded in the input metafile. ---")
+                    log.info(
+                        f"--- Skipping {prefix} ... Not incuded in the input metafile. ---"
+                    )
                     execution_summary[pulsar.name]["num_files_skip_meta"] += 1
                     continue
 

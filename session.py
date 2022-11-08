@@ -69,10 +69,10 @@ class Session:
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
         self.output_dir = test_dir(os.path.realpath(args.output_dir))
         self.config_file = test_input_file(os.path.realpath(args.config))
-        
+
         if args.metafile is not None:
             self.input_metafile = test_input_file(os.path.realpath(args.metafile))
-            with open(self.input_metafile, 'r') as metafile:
+            with open(self.input_metafile, "r") as metafile:
                 self.input_file_names = []
                 for f in metafile.readlines():
                     f_full = test_input_file(f"{self.input_dir}/{f.strip()}")

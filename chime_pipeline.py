@@ -91,8 +91,11 @@ def run_cmd(cmd: str, test_mode: bool):
         if not test_mode:
             p = subprocess.Popen(cmd, shell=True)
             p.wait()
+            return p.returncode
+        return "skip"
     except:
         log.error(f"Error while executing command. cmd :: {cmd}")
+        return "error"
 
 
 def create_metafile(session: Session, pulsar: PulsarConfig):

@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from glob import glob
-from os import Popen
+from subprocess import Popen
 
 from astropy import log
 

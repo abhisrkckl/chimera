@@ -1,6 +1,7 @@
 import argparse
-import os
 import json
+import os
+
 from validation import test_dir, test_input_file, test_read_dir
 
 

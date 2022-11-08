@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import glob
-import os
-import pptoas as ppt
-import subprocess
 import json
-from astropy import log
-from pplib import *
+import os
 from datetime import datetime
-from validation import test_input_file
+from subprocess import Popen
+
+from astropy import log
+from pplib import write_TOAs
+from pptoas import GetTOAs
+
 from session import PulsarConfig, Session
+from validation import test_input_file
 
 log.setLevel("INFO")
 
@@ -19,7 +21,7 @@ def run_cmd(cmd: str, test_mode: bool):
     try:
         log.info(f"RUN $ {cmd}")
         if not test_mode:
-            p = subprocess.Popen(cmd, shell=True)
+            p = Popen(cmd, shell=True)
             p.wait()
             return p.returncode
         return "skip"
@@ -132,7 +134,7 @@ if __name__ == "__main__":
         # Make a metafile of the fully zapped and scrunched files
         meta_file = create_metafile(session, pulsar)
 
-        gt = ppt.GetTOAs(meta_file, pulsar.model_portrait)
+        gt = GetTOAs(meta_file, pulsar.model_portrait)
         gt.get_TOAs(DM0=pulsar.dm)
         # Writing to a tim file
         timfile = f"{session.output_dir}/{pulsar.name}.tim"

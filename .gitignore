@@ -11,3 +11,4 @@
 *.pyc
 *.pzap
 *.tim
+chime_pipeline_summary_*.json

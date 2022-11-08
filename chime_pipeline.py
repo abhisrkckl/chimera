@@ -8,6 +8,7 @@ import pptoas as ppt
 import subprocess
 import argparse
 import json
+from tests import test_dir, test_input_file, test_read_dir
 
 log.setLevel("INFO")
 
@@ -64,9 +65,10 @@ class Session:
         )
         args = parser.parse_args()
 
-        self.input_dir = os.path.realpath(args.input_dir)
-        self.output_dir = os.path.realpath(args.ouput_dir)
-        self.config_file = os.path.realpath(args.config)
+        self.input_dir = test_read_dir( os.path.realpath(args.input_dir) )
+        self.output_dir = test_dir( os.path.realpath(args.ouput_dir) )
+        self.config_file = test_input_file( os.path.realpath(args.config) )
+        
         self.test_mode = args.test_mode
 
         self.process_config()

@@ -34,6 +34,7 @@
  - `--reprocess` option
  - Validate final output and TOA file
  - Validate config
+ - zap_chans in the config file should be a list instead of string.
  - Update README
  - Created CHANGELOG
 

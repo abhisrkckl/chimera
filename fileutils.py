@@ -12,5 +12,17 @@ def get_file_prefix(filename: str):
     return os.path.splitext(os.path.basename(filename))[0]
 
 
-def get_final_output_file(session: Session, prefix: str):
+def get_final_output_filename(session: Session, prefix: str):
+    return f"{session.output_dir}/{prefix}.pzap"
+
+
+def get_zap_filename(session: Session, prefix: str):
+    return f"{session.output_dir}/{prefix}.zap"
+
+
+def get_ftscr_filename(session: Session, prefix: str):
+    return f"{session.output_dir}/{prefix}.ftscr"
+
+
+def get_pzap_filename(session: Session, prefix: str):
     return f"{session.output_dir}/{prefix}.pzap"

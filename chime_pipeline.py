@@ -6,9 +6,16 @@ import traceback
 from astropy import log
 
 from exec import create_exec_summary_file, run_cmd
-from fileutils import get_file_prefix, get_final_output_file, get_input_ar_files
+from fileutils import (
+    get_file_prefix,
+    get_final_output_filename,
+    get_ftscr_filename,
+    get_input_ar_files,
+    get_pzap_filename,
+    get_zap_filename,
+)
 from session import Session
-from toautils import create_toas, remove_toa_file
+from toautils import create_toas, remove_toa_file, validate_toa_file
 from validation import test_input_file
 
 if __name__ == "__main__":
@@ -49,7 +56,7 @@ if __name__ == "__main__":
                     continue
 
             # Skip the file if it has already been processed.
-            final_output_file = get_final_output_file(session, prefix)
+            final_output_file = get_final_output_filename(session, prefix)
             if os.path.exists(final_output_file) and os.path.isfile(final_output_file):
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
                 execution_summary[pulsar.name]["num_files_skip_exist"] += 1
@@ -61,50 +68,48 @@ if __name__ == "__main__":
             try:
                 test_input_file(f"{ar_file}")
             except OSError as err:
-                log.error(
-                    f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file."
-                )
+                log.error(f"Error reading file {ar_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # CHIME preprocessing script
-            zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {session.input_dir}/{prefix}.ar"
+            zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
             run_cmd(zap_cmd, session.test_mode)
 
             try:
-                test_input_file(f"{session.output_dir}/{prefix}.zap")
+                zap_file = get_zap_filename(session, prefix)
+                test_input_file(zap_file)
             except OSError as err:
-                log.error(
-                    f"Error reading file {session.output_dir}/{prefix}.zap. Skipping file."
-                )
+                log.error(f"Error reading file {zap_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # Command to scrunch to 64 frequency channels
-            scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {session.output_dir}/{prefix}.zap"
+            scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {zap_file}"
             run_cmd(scr_cmd, session.test_mode)
 
             try:
-                test_input_file(f"{session.output_dir}/{prefix}.ftscr")
+                ftscr_file = get_ftscr_filename(session, prefix)
+                test_input_file(ftscr_file)
             except OSError as err:
-                log.error(
-                    f"Error reading file {session.output_dir}/{prefix}.ftscr. Skipping file."
-                )
+                log.error(f"Error reading file {ftscr_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # Post scrunching zapping. Will need to be unique per source
-            pzap_cmd = f'paz -z "{pulsar.zap_chans}" -e pzap -O {session.output_dir} {session.output_dir}/{prefix}.ftscr'
+            pzap_cmd = f'paz -z "{pulsar.zap_chans}" -e pzap -O {session.output_dir} {ftscr_file}'
             run_cmd(pzap_cmd, session.test_mode)
 
             try:
-                test_input_file(f"{session.output_dir}/{prefix}.pzap")
+                pzap_file = get_pzap_filename(session, prefix)
+                test_input_file(pzap_file)
             except OSError as err:
-                log.error(
-                    f"Error reading file {session.output_dir}/{prefix}.pzap. Skipping file."
-                )
+                log.error(f"Error reading file {pzap_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
+
+            # This will change if there are more steps.
+            assert pzap_file == final_output_file
 
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
@@ -119,5 +124,12 @@ if __name__ == "__main__":
                 traceback.print_tb(err.__traceback__)
                 execution_summary[pulsar.name]["num_files_toafail"] += 1
                 continue
+
+        num_toas_expected = (
+            execution_summary[pulsar.name]["num_files_total"]
+            - execution_summary[pulsar.name]["num_files_skip_meta"]
+            - execution_summary[pulsar.name]["num_files_toafail"]
+        )
+        validate_toa_file(session, pulsar, num_toas_expected)
 
     create_exec_summary_file(session, execution_summary)

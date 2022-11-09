@@ -1,6 +1,7 @@
 import os
 
 from astropy import log
+from pint.toa import get_TOAs
 from pplib import write_TOAs
 from pptoas import GetTOAs
 
@@ -29,3 +30,13 @@ def remove_toa_file(session: Session, pulsar: PulsarConfig):
     if os.path.isfile(timfile):
         log.info(f"File {timfile} will be rewritten.")
         os.unlink(timfile)
+
+
+def validate_toa_file(session: Session, pulsar: PulsarConfig, num_toas_expected: int):
+    timfile = get_tim_filename(session, pulsar)
+    try:
+        toas = get_TOAs(timfile)
+        assert len(toas) == num_toas_expected
+        log.info(f"Successfully created {timfile}.")
+    except:
+        log.error(f"Unable to validate {timfile}.")

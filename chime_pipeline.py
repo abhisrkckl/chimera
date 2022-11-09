@@ -29,7 +29,6 @@ if __name__ == "__main__":
 
         log.info(f"### Processing {pulsar.name} ###")
 
-        # Run psrsh in a loop to avoid memory issues
         input_ar_files = get_input_ar_files(session, pulsar)
 
         execution_summary[pulsar.name] = {
@@ -41,11 +40,15 @@ if __name__ == "__main__":
             "num_files_toafail": 0,
         }
 
+        # List to store successfully processed files for TOA generation.
         input_files_for_toas = []
+
+        # Process files one-by-one to reduce memory issues
+        # Skip files that are not processed successfully.
         for ar_file in input_ar_files:
             prefix = get_file_prefix(ar_file)
 
-            # Skip the file if it is not in the input metafile (if input metafile is given).
+            # Skip the file if it is not in the input metafile if the input metafile is given.
             if session.input_metafile is not None:
                 print(session.input_file_names)
                 if ar_file not in session.input_file_names:
@@ -55,7 +58,7 @@ if __name__ == "__main__":
                     execution_summary[pulsar.name]["num_files_skip_meta"] += 1
                     continue
 
-            # Skip the file if it has already been processed.
+            # Skip the file if it has already been processed (except when the --reprocess option is given).
             final_output_file = get_final_output_filename(session, prefix)
             if (
                 os.path.exists(final_output_file) and os.path.isfile(final_output_file)
@@ -75,6 +78,9 @@ if __name__ == "__main__":
                 continue
 
             # CHIME preprocessing script
+            # 1. Convert coherence mode data to Stokes mode.
+            # 2. Run RFI excition
+            # 3. Convert from Timer to PSRFITS format
             zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
             run_cmd(zap_cmd, session.test_mode)
 
@@ -86,7 +92,7 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
-            # Command to scrunch to 64 frequency channels
+            # Scrunch in Frequency and Time, Update DM
             scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {zap_file}"
             run_cmd(scr_cmd, session.test_mode)
 
@@ -98,7 +104,8 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
-            # Post scrunching zapping. Will need to be unique per source
+            # Remove bad channels based on the config.
+            # This will need to be unique for each pulsar.
             pzap_cmd = f'paz -z "{pulsar.zap_chans}" -e pzap -O {session.output_dir} {ftscr_file}'
             run_cmd(pzap_cmd, session.test_mode)
 
@@ -116,6 +123,8 @@ if __name__ == "__main__":
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
 
+        # Recreate the TOA file. Any existing TOA file will be rewritten.
+        # Skip files for which the TOA generation fails.
         remove_toa_file(session, pulsar)
         for toa_input_file in input_files_for_toas:
             try:
@@ -127,6 +136,9 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_toafail"] += 1
                 continue
 
+        # Validate TOA file
+        # -- Can it be read using PINT?
+        # -- Is the number of TOAs equal to the expected number?
         num_toas_expected = (
             execution_summary[pulsar.name]["num_files_total"]
             - execution_summary[pulsar.name]["num_files_skip_meta"]
@@ -134,4 +146,5 @@ if __name__ == "__main__":
         )
         validate_toa_file(session, pulsar, num_toas_expected)
 
+    # Write out a summary in JSON format.
     create_exec_summary_file(session, execution_summary)

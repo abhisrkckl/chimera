@@ -64,6 +64,14 @@ class Session:
             action="store_true",
             help="Run in test mode (don't execute commands, display only).",
         )
+        parser.add_argument(
+            "-r",
+            "--reprocess",
+            required=False,
+            dest="reprocess",
+            action="store_true",
+            help="Reprocess files regardless of existing output files.",
+        )
         args = parser.parse_args()
 
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
@@ -81,6 +89,7 @@ class Session:
             self.input_metafile = None
 
         self.test_mode = args.test_mode
+        self.reprocess = args.reprocess
 
         self.process_config()
 

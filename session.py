@@ -20,7 +20,7 @@ class PulsarConfig:
     ):
         self.name = name
         self.dm = dm
-        self.model_portrait = model_portrait
+        self.model_portrait = test_input_file(model_portrait)
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
@@ -35,7 +35,6 @@ class PulsarConfig:
             assert isinstance(self.dm, float) and self.dm > 0
 
             assert isinstance(self.model_portrait, str)
-            test_input_file(self.model_portrait)
 
             assert isinstance(self.nchan, int) and self.nchan > 0
 

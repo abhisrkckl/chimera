@@ -29,8 +29,10 @@ if __name__ == "__main__":
 
         log.info(f"### Processing {pulsar.name} ###")
 
+        # All input files.
         input_ar_files = get_input_ar_files(session, pulsar)
 
+        # Summary dict.
         execution_summary[pulsar.name] = {
             "num_files_total": len(input_ar_files),
             "num_files_success": 0,
@@ -50,7 +52,6 @@ if __name__ == "__main__":
 
             # Skip the file if it is not in the input metafile if the input metafile is given.
             if session.input_metafile is not None:
-                print(session.input_file_names)
                 if ar_file not in session.input_file_names:
                     log.info(
                         f"--- Skipping {prefix} ... Not incuded in the input metafile. ---"
@@ -106,7 +107,10 @@ if __name__ == "__main__":
 
             # Remove bad channels based on the config.
             # This will need to be unique for each pulsar.
-            pzap_cmd = f'paz -z "{pulsar.zap_chans}" -e pzap -O {session.output_dir} {ftscr_file}'
+            zap_chans_str = " ".join(map(str, pulsar.zap_chans))
+            pzap_cmd = (
+                f'paz -z "{zap_chans_str}" -e pzap -O {session.output_dir} {ftscr_file}'
+            )
             run_cmd(pzap_cmd, session.test_mode)
 
             try:

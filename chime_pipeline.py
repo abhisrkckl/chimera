@@ -52,7 +52,6 @@ if __name__ == "__main__":
 
             # Skip the file if it is not in the input metafile if the input metafile is given.
             if session.input_metafile is not None:
-                print(session.input_file_names)
                 if ar_file not in session.input_file_names:
                     log.info(
                         f"--- Skipping {prefix} ... Not incuded in the input metafile. ---"

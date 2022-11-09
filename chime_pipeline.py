@@ -29,8 +29,10 @@ if __name__ == "__main__":
 
         log.info(f"### Processing {pulsar.name} ###")
 
+        # All input files.
         input_ar_files = get_input_ar_files(session, pulsar)
 
+        # Summary dict.
         execution_summary[pulsar.name] = {
             "num_files_total": len(input_ar_files),
             "num_files_success": 0,

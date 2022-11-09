@@ -16,7 +16,7 @@ class PulsarConfig:
         model_portrait: str,
         nchan: int,
         nsub: int,
-        zap_chans: str,
+        zap_chans: list,
     ):
         self.name = name
         self.dm = dm
@@ -25,6 +25,30 @@ class PulsarConfig:
         self.nsub = nsub
         self.zap_chans = zap_chans
         self.datafile_glob_prefix = f"CHIME_{self.name}_beam_?_?????_?????"
+
+        self.validate()
+
+    def validate(self):
+        try:
+            assert isinstance(self.name, str) and len(self.name)>0
+
+            assert isinstance(self.dm, float) and self.dm>0
+            
+            assert isinstance(self.model_portrait, str)
+            test_input_file(self.model_portrait)
+
+            assert isinstance(self.nchan, int) and self.nchan > 0
+            
+            assert isinstance(self.nsub, int) and self.nchan > 0
+
+            assert isinstance(self.zap_chans, list)
+            for zap_chan in self.zap_chans:
+                assert isinstance(zap_chan, int) and zap_chan >= 0 and zap_chan <= self.nchan
+        except:
+            log.error("Unable to validate the config.")
+            raise
+
+        log.info("Successfully validated the config.")
 
 
 class Session:
@@ -88,7 +112,7 @@ class Session:
         else:
             self.input_metafile = None
 
-        self.test_mode = False # args.test_mode
+        self.test_mode = False  # args.test_mode
         self.reprocess = args.reprocess
 
         self.process_config()

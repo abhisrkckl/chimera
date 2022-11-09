@@ -1,0 +1,39 @@
+19 Sep 2022
+ - Initial commit (Code from Lulu)
+
+06 Oct 2022
+ - Preliminary pipeline
+
+13 Oct 2022
+ - Session class for storing global state
+ - run_cmd function
+ - Process files one-by-one (Takes up too much memory otherwise)
+ - Popen instead of os.system
+ - Command line arguments and config file
+ - Added licence
+
+27 Oct 2022
+ - Minor bug fixes
+ - Save TOAs to tim file
+
+07 Nov 2022
+ - Catch JSON errors
+ - Update README
+
+08 Nov 2022
+ - Skip already processed files
+ - Validation tests for input files and directories
+ - Validation tests for intermediate files
+ - Rearrange code into multiple files
+ - Input metafile
+ - Improve logging
+
+09 Nov 2022
+ - Create TOAs one by one (better error handling)
+ - Remove test mode temporarily (it was broken)
+ - `--reprocess` option
+ - Validate final output and TOA file
+ - Validate config
+ - Update README
+ - Created CHANGELOG
+

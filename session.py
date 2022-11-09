@@ -31,16 +31,12 @@ class PulsarConfig:
     def validate(self):
         try:
             assert isinstance(self.name, str) and len(self.name) > 0
-
             assert isinstance(self.dm, float) and self.dm > 0
-
             assert isinstance(self.model_portrait, str)
-
             assert isinstance(self.nchan, int) and self.nchan > 0
-
             assert isinstance(self.nsub, int) and self.nchan > 0
-
             assert isinstance(self.zap_chans, list)
+
             for zap_chan in self.zap_chans:
                 assert (
                     isinstance(zap_chan, int)

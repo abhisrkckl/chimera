@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
             # Skip the file if it has already been processed.
             final_output_file = get_final_output_filename(session, prefix)
-            if os.path.exists(final_output_file) and os.path.isfile(final_output_file):
+            if (os.path.exists(final_output_file) and os.path.isfile(final_output_file)) and not session.reprocess:
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
                 execution_summary[pulsar.name]["num_files_skip_exist"] += 1
                 input_files_for_toas.append(final_output_file)

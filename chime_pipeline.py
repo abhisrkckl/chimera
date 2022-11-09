@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import os
+import traceback
 
 from astropy import log
 
 from exec import create_exec_summary_file, run_cmd
 from fileutils import get_file_prefix, get_final_output_file, get_input_ar_files
 from session import Session
-from toautils import create_tim_file
+from toautils import create_toas, remove_toa_file
 from validation import test_input_file
 
 if __name__ == "__main__":
@@ -29,8 +30,11 @@ if __name__ == "__main__":
             "num_files_success": 0,
             "num_files_skip_exist": 0,
             "num_files_skip_meta": 0,
+            "num_files_processfail": 0,
+            "num_files_toafail": 0,
         }
 
+        input_files_for_toas = []
         for ar_file in input_ar_files:
             prefix = get_file_prefix(ar_file)
 
@@ -49,6 +53,7 @@ if __name__ == "__main__":
             if os.path.exists(final_output_file) and os.path.isfile(final_output_file):
                 log.info(f"--- Skipping {prefix} ... Output already exists. ---")
                 execution_summary[pulsar.name]["num_files_skip_exist"] += 1
+                input_files_for_toas.append(final_output_file)
                 continue
 
             log.info(f"--- Processing {prefix} ---")
@@ -59,6 +64,7 @@ if __name__ == "__main__":
                 log.error(
                     f"Error reading file {session.input_dir}/{prefix}.ar. Skipping file."
                 )
+                execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # CHIME preprocessing script
@@ -71,6 +77,7 @@ if __name__ == "__main__":
                 log.error(
                     f"Error reading file {session.output_dir}/{prefix}.zap. Skipping file."
                 )
+                execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # Command to scrunch to 64 frequency channels
@@ -83,6 +90,7 @@ if __name__ == "__main__":
                 log.error(
                     f"Error reading file {session.output_dir}/{prefix}.ftscr. Skipping file."
                 )
+                execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
             # Post scrunching zapping. Will need to be unique per source
@@ -95,21 +103,21 @@ if __name__ == "__main__":
                 log.error(
                     f"Error reading file {session.output_dir}/{prefix}.pzap. Skipping file."
                 )
+                execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
+            input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
 
-        if execution_summary[pulsar.name]["num_files_success"] > 0:
+        remove_toa_file(session, pulsar)
+        for toa_input_file in input_files_for_toas:
             try:
-                create_tim_file(session, pulsar)
-                execution_summary[pulsar.name]["toa_file_created"] = True
+                create_toas(session, pulsar, toa_input_file)
             except Exception as err:
-                log.error(f"Failed to create TOA file for {pulsar.name}.")
+                log.error(f"Failed to create TOA for {toa_input_file}. Skipping file.")
                 log.error(err)
-                execution_summary[pulsar.name]["toa_file_created"] = False
+                traceback.print_tb(err.__traceback__)
+                execution_summary[pulsar.name]["num_files_toafail"] += 1
                 continue
-        else:
-            log.warning("Skipping TOA file creation as no new files were processed.")
-            execution_summary[pulsar.name]["toa_file_created"] = False
 
     create_exec_summary_file(session, execution_summary)

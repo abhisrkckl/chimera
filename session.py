@@ -56,14 +56,14 @@ class Session:
         parser.add_argument(
             "-c", "--config", required=True, help="Configuration file (JSON format)."
         )
-        parser.add_argument(
-            "-t",
-            "--test",
-            required=False,
-            dest="test_mode",
-            action="store_true",
-            help="Run in test mode (don't execute commands, display only).",
-        )
+        # parser.add_argument(
+        #     "-t",
+        #     "--test",
+        #     required=False,
+        #     dest="test_mode",
+        #     action="store_true",
+        #     help="Run in test mode (don't execute commands, display only).",
+        # )
         parser.add_argument(
             "-r",
             "--reprocess",
@@ -88,7 +88,7 @@ class Session:
         else:
             self.input_metafile = None
 
-        self.test_mode = args.test_mode
+        self.test_mode = False # args.test_mode
         self.reprocess = args.reprocess
 
         self.process_config()

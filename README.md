@@ -3,7 +3,7 @@ Create wideband TOAs from CHIME pulsar observations (fold mode data).
 
 ## Usage
 
-`chime_pipeline.py [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-t] [-r]`
+`chime_pipeline.py [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r]`
 
 | Option                                    | Description                                                   |  
 |-------------------------------------------|---------------------------------------------------------------|
@@ -12,7 +12,6 @@ Create wideband TOAs from CHIME pulsar observations (fold mode data).
 | `-m METAFILE`, `--metafile METAFILE`      | If given, only process the input files included in METAFILE.  |
 | `-o OUTPUT_DIR`, `--output_dir OUTPUT_DIR`| Directory where output files will be stored.                  |
 | `-c CONFIG`, `--config CONFIG`            | Configuration file (JSON format).                             |
-| `-t`, `--test`                            | Run in test mode (don't execute commands, display only).      |
 | `-r`, `--reprocess`                       | Reprocess files regardless of existing output files.          |
 
 ## Summary

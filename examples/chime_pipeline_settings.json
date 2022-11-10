@@ -2,7 +2,7 @@
     {
         "name" : "J2302+4442",
         "dm" : 13.71907408150567,
-        "model_portrait" : "reference_files/J2302+4442-fit.spl",
+        "template" : "reference_files/J2302+4442-fit.spl",
         "nchan" : 64,
         "nsub" : 1,
         "zap_chans" : [17, 36, 15, 7, 2, 0, 1, 5, 47, 40, 34]

@@ -13,14 +13,14 @@ class PulsarConfig:
         self,
         name: str,
         dm: float,
-        model_portrait: str,
+        template: str,
         nchan: int,
         nsub: int,
         zap_chans: list,
     ):
         self.name = name
         self.dm = dm
-        self.model_portrait = test_input_file(model_portrait)
+        self.template = test_input_file(template)
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
@@ -32,7 +32,7 @@ class PulsarConfig:
         try:
             assert isinstance(self.name, str) and len(self.name) > 0
             assert isinstance(self.dm, float) and self.dm > 0
-            assert isinstance(self.model_portrait, str)
+            assert isinstance(self.template, str)
             assert isinstance(self.nchan, int) and self.nchan > 0
             assert isinstance(self.nsub, int) and self.nchan > 0
             assert isinstance(self.zap_chans, list)

@@ -16,7 +16,7 @@ def create_toas(session: Session, pulsar: PulsarConfig, input_file: str):
     # Make a metafile of the fully zapped and scrunched files
     # session.create_output_metafile(pulsar)
 
-    gt = GetTOAs(input_file, pulsar.model_portrait)
+    gt = GetTOAs(input_file, pulsar.template)
     gt.get_TOAs(DM0=pulsar.dm)
 
     # Writing to a tim file

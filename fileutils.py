@@ -13,7 +13,8 @@ def get_file_prefix(filename: str):
 
 
 def get_final_output_filename(session: Session, prefix: str):
-    return f"{session.output_dir}/{prefix}.pzap"
+    ext = "pzap" if not session.skip_pzap else "ftscr"
+    return f"{session.output_dir}/{prefix}.{ext}"
 
 
 def get_zap_filename(session: Session, prefix: str):

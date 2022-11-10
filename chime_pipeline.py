@@ -5,7 +5,7 @@ import traceback
 
 from astropy import log
 
-from exec import create_exec_summary_file, run_cmd
+from exec import create_exec_summary_file, run_cmd, update_fits_header
 from fileutils import (
     get_file_prefix,
     get_final_output_filename,
@@ -97,6 +97,8 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
+            update_fits_header(zap_file, 1)
+
             # Scrunch in Frequency and Time, Update DM
             scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {zap_file}"
             run_cmd(scr_cmd, session.test_mode)
@@ -108,6 +110,8 @@ if __name__ == "__main__":
                 log.error(f"Error reading file {ftscr_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
+            
+            update_fits_header(ftscr_file, 2)
 
             if session.clean_files:
                 log.warning(f"Removing file {zap_file} ... (--clean)")
@@ -127,6 +131,8 @@ if __name__ == "__main__":
                     log.error(f"Error reading file {pzap_file}. Skipping file.")
                     execution_summary[pulsar.name]["num_files_processfail"] += 1
                     continue
+
+                update_fits_header(pzap_file, 3)
 
                 # This will change if there are fewer or more steps.
                 assert pzap_file == final_output_file
@@ -185,3 +191,4 @@ if __name__ == "__main__":
 
     # Write out a summary in JSON format.
     create_exec_summary_file(session, execution_summary)
+    

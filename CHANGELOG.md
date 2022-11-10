@@ -45,3 +45,4 @@
  - Skip TOA generation if template is not given.
  - Skip post-scrunch zapping if no channels are flagged (zap_chans)
  - `--clean` option to remove intermediate files.
+ - Update FITS headers (PL_CMD and PL_LVL)

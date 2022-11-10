@@ -31,10 +31,14 @@
 09 Nov 2022
  - Create TOAs one by one (better error handling)
  - Remove test mode temporarily (it was broken)
- - `--reprocess` option
+ - Reprocess all input files with `--reprocess` option
  - Validate final output and TOA file
  - Validate config
  - zap_chans in the config file should be a list instead of string.
  - Update README
  - Created CHANGELOG
 
+10 Nov 2022
+ - Rename "model_portrait" to "template"
+ - Skip post-scrunch zapping with `--skip_pzap` option
+ - Skip TOA generation with `--skip_toagen` option

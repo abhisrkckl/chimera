@@ -102,6 +102,13 @@ class Session:
             action="store_true",
             help="Skip post-scrunch RFI zapping step.",
         )
+        parser.add_argument(
+            "--skip_toagen",
+            required=False,
+            dest="skip_toagen",
+            action="store_true",
+            help="Skip TOA generation.",
+        )
         args = parser.parse_args()
 
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
@@ -121,6 +128,7 @@ class Session:
         self.test_mode = False  # args.test_mode
         self.reprocess = args.reprocess
         self.skip_pzap = args.skip_pzap
+        self.skip_toagen = args.skip_toagen
 
         self.process_config()
 

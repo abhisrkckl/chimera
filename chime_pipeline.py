@@ -133,28 +133,34 @@ if __name__ == "__main__":
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
 
-        # Recreate the TOA file. Any existing TOA file will be rewritten.
-        # Skip files for which the TOA generation fails.
-        remove_toa_file(session, pulsar)
-        for toa_input_file in input_files_for_toas:
-            try:
-                create_toas(session, pulsar, toa_input_file)
-            except Exception as err:
-                log.error(f"Failed to create TOA for {toa_input_file}. Skipping file.")
-                log.error(err)
-                traceback.print_tb(err.__traceback__)
-                execution_summary[pulsar.name]["num_files_toafail"] += 1
-                continue
+        
+        if not session.skip_toagen:
+            # Recreate the TOA file. Any existing TOA file will be rewritten.
+            # Skip files for which the TOA generation fails.
+            remove_toa_file(session, pulsar)
+            for toa_input_file in input_files_for_toas:
+                try:
+                    create_toas(session, pulsar, toa_input_file)
+                except Exception as err:
+                    log.error(f"Failed to create TOA for {toa_input_file}. Skipping file.")
+                    log.error(err)
+                    traceback.print_tb(err.__traceback__)
+                    execution_summary[pulsar.name]["num_files_toafail"] += 1
+                    continue
 
-        # Validate TOA file
-        # -- Can it be read using PINT?
-        # -- Is the number of TOAs equal to the expected number?
-        num_toas_expected = (
-            execution_summary[pulsar.name]["num_files_total"]
-            - execution_summary[pulsar.name]["num_files_skip_meta"]
-            - execution_summary[pulsar.name]["num_files_toafail"]
-        )
-        validate_toa_file(session, pulsar, num_toas_expected)
+            # Validate TOA file
+            # -- Can it be read using PINT?
+            # -- Is the number of TOAs equal to the expected number?
+            num_toas_expected = (
+                execution_summary[pulsar.name]["num_files_total"]
+                - execution_summary[pulsar.name]["num_files_skip_meta"]
+                - execution_summary[pulsar.name]["num_files_toafail"]
+            )
+            validate_toa_file(session, pulsar, num_toas_expected)
+        else:
+            log.info("Skipping TOA generation (--skip_toagen).")
+            # num_files_toafail is not relevant if --skip_toagen is given.
+            execution_summary[pulsar.name].pop("num_files_toafail")
 
     # Write out a summary in JSON format.
     create_exec_summary_file(session, execution_summary)

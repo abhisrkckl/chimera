@@ -109,6 +109,10 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
+            if session.clean_files:
+                log.warning(f"Removing file {zap_file} ... (--clean)")
+                os.unlink(zap_file)
+
             if not session.skip_pzap and len(pulsar.zap_chans) > 0:
                 # Remove bad channels based on the config.
                 # This will need to be unique for each pulsar.
@@ -126,8 +130,13 @@ if __name__ == "__main__":
 
                 # This will change if there are fewer or more steps.
                 assert pzap_file == final_output_file
+
+                if session.clean_files:
+                    log.warning(f"Removing file {ftscr_file} ... (--clean)")
+                    os.unlink(ftscr_file)
+
             elif len(pulsar.zap_chans) == 0:
-                log.info(
+                log.warning(
                     "Skipping post-scrunch zapping step because no channels were flagged for zapping (zap_chans)."
                 )
                 assert ftscr_file == final_output_file
@@ -164,7 +173,7 @@ if __name__ == "__main__":
             )
             validate_toa_file(session, pulsar, num_toas_expected)
         elif len(pulsar.template) == 0:
-            log.info(
+            log.warning(
                 "Skipping TOA generation because the template file is not specified."
             )
             # num_files_toafail is not relevant if no TOAs are generated.

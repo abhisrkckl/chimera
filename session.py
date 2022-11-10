@@ -109,6 +109,14 @@ class Session:
             action="store_true",
             help="Skip TOA generation.",
         )
+        parser.add_argument(
+            "-C",
+            "--clean",
+            required=False,
+            dest="clean_files",
+            action="store_true",
+            help="Remove intermediate files.",
+        )
         args = parser.parse_args()
 
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
@@ -129,6 +137,7 @@ class Session:
         self.reprocess = args.reprocess
         self.skip_pzap = args.skip_pzap
         self.skip_toagen = args.skip_toagen
+        self.clean_files = args.clean_files
 
         self.process_config()
 

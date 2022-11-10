@@ -3,7 +3,7 @@ Create wideband TOAs from CHIME pulsar observations (fold mode data).
 
 ## Usage
 
-`chime_pipeline.py [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r]`
+`chime_pipeline.py [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r] [--skip_pzap] [--skip_toagen] [-C]`
 
 | Option                                    | Description                                                   |  
 |-------------------------------------------|---------------------------------------------------------------|
@@ -13,6 +13,9 @@ Create wideband TOAs from CHIME pulsar observations (fold mode data).
 | `-o OUTPUT_DIR`, `--output_dir OUTPUT_DIR`| Directory where output files will be stored.                  |
 | `-c CONFIG`, `--config CONFIG`            | Configuration file (JSON format).                             |
 | `-r`, `--reprocess`                       | Reprocess files regardless of existing output files.          |
+| `--skip_pzap`                             | Skip post-scrunch RFI zapping step.                           |
+| `--skip_toagen`                           | Skip TOA generation.                                          |
+| `-C`, `--clean`                           | Remove intermediate files.                                    |
 
 ## Summary
 
@@ -26,10 +29,12 @@ The processing steps are as follows:
         - Run RFI excision
         - Convert from Timer to PSRFITS format
         - Scrunch in Frequency and Time, Update DM (Based on the config file)
-        - Remove bad channels (Defined in the config file)
+        - if not --skip_pzap and zap_chans are given in config file
+            - Remove bad channels (Defined in the config file)
     - If any of the above processing steps are unsuccessful, skip that file and proceed.
-- Create TOA file from successfully processed data files. (Skip files if TOA generation fails.)
-- Validate TOA file.
+- if not --skip_toagen and the template is given in the config file
+    - Create TOA file from successfully processed data files. (Skip files if TOA generation fails.)
+    - Validate TOA file.
 
 ## Dependencies
 

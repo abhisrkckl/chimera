@@ -23,7 +23,7 @@ The processing steps are as follows:
 - For each input data file:
     - try
         - Convert coherence mode data to Stokes mode.
-        - Run RFI excition
+        - Run RFI excision
         - Convert from Timer to PSRFITS format
         - Scrunch in Frequency and Time, Update DM (Based on the config file)
         - Remove bad channels (Defined in the config file)

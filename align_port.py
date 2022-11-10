@@ -83,7 +83,7 @@ for i in range(subbands):
 
 plt.clf()
 
-# Calculating the time delay between each fequency bin and the maximum frequency bin. Pulsar handbook equation 4.7
+# Calculating the time delay between each frequency bin and the maximum frequency bin. Pulsar handbook equation 4.7
 time_delay = (
     (freqs.to(u.MHz).value ** -2 - freqs.max().to(u.MHz).value ** -2)
     * 4.15e6

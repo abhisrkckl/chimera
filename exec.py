@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from subprocess import Popen
 
 from astropy import log

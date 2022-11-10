@@ -25,6 +25,10 @@ if __name__ == "__main__":
     execution_summary = dict()
 
     session = Session()
+
+    if session.reprocess:
+        log.info("Will reprocess all input files (--reprocess).")
+
     for pulsar in session.pulsars:
 
         log.info(f"### Processing {pulsar.name} ###")
@@ -105,24 +109,28 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
-            # Remove bad channels based on the config.
-            # This will need to be unique for each pulsar.
-            zap_chans_str = " ".join(map(str, pulsar.zap_chans))
-            pzap_cmd = (
-                f'paz -z "{zap_chans_str}" -e pzap -O {session.output_dir} {ftscr_file}'
-            )
-            run_cmd(pzap_cmd, session.test_mode)
+            if not session.skip_pzap:
+                # Remove bad channels based on the config.
+                # This will need to be unique for each pulsar.
+                zap_chans_str = " ".join(map(str, pulsar.zap_chans))
+                pzap_cmd = (
+                    f'paz -z "{zap_chans_str}" -e pzap -O {session.output_dir} {ftscr_file}'
+                )
+                run_cmd(pzap_cmd, session.test_mode)
 
-            try:
-                pzap_file = get_pzap_filename(session, prefix)
-                test_input_file(pzap_file)
-            except OSError as err:
-                log.error(f"Error reading file {pzap_file}. Skipping file.")
-                execution_summary[pulsar.name]["num_files_processfail"] += 1
-                continue
+                try:
+                    pzap_file = get_pzap_filename(session, prefix)
+                    test_input_file(pzap_file)
+                except OSError as err:
+                    log.error(f"Error reading file {pzap_file}. Skipping file.")
+                    execution_summary[pulsar.name]["num_files_processfail"] += 1
+                    continue
 
-            # This will change if there are more steps.
-            assert pzap_file == final_output_file
+                # This will change if there are fewer or more steps.
+                assert pzap_file == final_output_file
+            else:
+                log.info("Skipping post-scrunch zapping step. (--skip_pzap)")
+                assert ftscr_file == final_output_file
 
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1

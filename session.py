@@ -13,14 +13,14 @@ class PulsarConfig:
         self,
         name: str,
         dm: float,
-        template: str,
         nchan: int,
         nsub: int,
         zap_chans: list,
+        template: str = "",
     ):
         self.name = name
         self.dm = dm
-        self.template = test_input_file(template)
+        self.template = test_input_file(template) if len(template)>0 else template
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans

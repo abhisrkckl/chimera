@@ -43,4 +43,5 @@
  - Skip post-scrunch zapping with `--skip_pzap` option
  - Skip TOA generation with `--skip_toagen` option
  - Skip TOA generation if template is not given.
+ - Skip post-scrunch zapping if no channels are flagged (zap_chans)
  

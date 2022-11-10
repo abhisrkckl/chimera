@@ -12,8 +12,8 @@ def get_file_prefix(filename: str):
     return os.path.splitext(os.path.basename(filename))[0]
 
 
-def get_final_output_filename(session: Session, prefix: str):
-    ext = "pzap" if not session.skip_pzap else "ftscr"
+def get_final_output_filename(session: Session, pulsar: PulsarConfig, prefix: str):
+    ext = "pzap" if not session.skip_pzap and len(pulsar.zap_chans) > 0 else "ftscr"
     return f"{session.output_dir}/{prefix}.{ext}"
 
 

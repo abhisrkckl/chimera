@@ -64,7 +64,7 @@ if __name__ == "__main__":
                     continue
 
             # Skip the file if it has already been processed (except when the --reprocess option is given).
-            final_output_file = get_final_output_filename(session, prefix)
+            final_output_file = get_final_output_filename(session, pulsar, prefix)
             if (
                 os.path.exists(final_output_file) and os.path.isfile(final_output_file)
             ) and not session.reprocess:
@@ -109,7 +109,7 @@ if __name__ == "__main__":
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
 
-            if not session.skip_pzap:
+            if not session.skip_pzap and len(pulsar.zap_chans) > 0:
                 # Remove bad channels based on the config.
                 # This will need to be unique for each pulsar.
                 zap_chans_str = " ".join(map(str, pulsar.zap_chans))
@@ -126,6 +126,11 @@ if __name__ == "__main__":
 
                 # This will change if there are fewer or more steps.
                 assert pzap_file == final_output_file
+            elif len(pulsar.zap_chans) == 0:
+                log.info(
+                    "Skipping post-scrunch zapping step because no channels were flagged for zapping (zap_chans)."
+                )
+                assert ftscr_file == final_output_file
             else:
                 log.info("Skipping post-scrunch zapping step. (--skip_pzap)")
                 assert ftscr_file == final_output_file
@@ -133,8 +138,7 @@ if __name__ == "__main__":
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
 
-        
-        if not session.skip_toagen and len(pulsar.template)>0:
+        if not session.skip_toagen and len(pulsar.template) > 0:
             # Recreate the TOA file. Any existing TOA file will be rewritten.
             # Skip files for which the TOA generation fails.
             remove_toa_file(session, pulsar)
@@ -142,7 +146,9 @@ if __name__ == "__main__":
                 try:
                     create_toas(session, pulsar, toa_input_file)
                 except Exception as err:
-                    log.error(f"Failed to create TOA for {toa_input_file}. Skipping file.")
+                    log.error(
+                        f"Failed to create TOA for {toa_input_file}. Skipping file."
+                    )
                     log.error(err)
                     traceback.print_tb(err.__traceback__)
                     execution_summary[pulsar.name]["num_files_toafail"] += 1
@@ -157,8 +163,10 @@ if __name__ == "__main__":
                 - execution_summary[pulsar.name]["num_files_toafail"]
             )
             validate_toa_file(session, pulsar, num_toas_expected)
-        elif len(pulsar.template)==0:
-            log.info("Skipping TOA generation because the template file is not specified.")
+        elif len(pulsar.template) == 0:
+            log.info(
+                "Skipping TOA generation because the template file is not specified."
+            )
             # num_files_toafail is not relevant if no TOAs are generated.
             execution_summary[pulsar.name].pop("num_files_toafail")
         else:

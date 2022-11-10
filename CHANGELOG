@@ -10,7 +10,7 @@
  - Process files one-by-one (Takes up too much memory otherwise)
  - Popen instead of os.system
  - Command line arguments and config file
- - Added licence
+ - Added license
 
 27 Oct 2022
  - Minor bug fixes

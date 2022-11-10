@@ -42,3 +42,5 @@
  - Rename "model_portrait" to "template"
  - Skip post-scrunch zapping with `--skip_pzap` option
  - Skip TOA generation with `--skip_toagen` option
+ - Skip TOA generation if template is not given.
+ 

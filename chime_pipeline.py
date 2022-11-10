@@ -134,7 +134,7 @@ if __name__ == "__main__":
             execution_summary[pulsar.name]["num_files_success"] += 1
 
         
-        if not session.skip_toagen:
+        if not session.skip_toagen and len(pulsar.template)>0:
             # Recreate the TOA file. Any existing TOA file will be rewritten.
             # Skip files for which the TOA generation fails.
             remove_toa_file(session, pulsar)
@@ -157,6 +157,10 @@ if __name__ == "__main__":
                 - execution_summary[pulsar.name]["num_files_toafail"]
             )
             validate_toa_file(session, pulsar, num_toas_expected)
+        elif len(pulsar.template)==0:
+            log.info("Skipping TOA generation because the template file is not specified.")
+            # num_files_toafail is not relevant if no TOAs are generated.
+            execution_summary[pulsar.name].pop("num_files_toafail")
         else:
             log.info("Skipping TOA generation (--skip_toagen).")
             # num_files_toafail is not relevant if --skip_toagen is given.

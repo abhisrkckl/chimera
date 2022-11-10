@@ -68,7 +68,7 @@ class Session:
             "-m",
             "--metafile",
             required=False,
-            help="Meta file that lists the input archives (should be stored in input_dir).",
+            help="Meta file that lists the input archives (input files should be stored in input_dir).",
         )
         parser.add_argument(
             "-o",

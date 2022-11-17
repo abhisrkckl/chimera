@@ -86,7 +86,7 @@ if __name__ == "__main__":
             # 1. Convert coherence mode data to Stokes mode.
             # 2. Run RFI excision
             # 3. Convert from Timer to PSRFITS format
-            zap_cmd = f"psrsh chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
+            zap_cmd = f"chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
             run_cmd(zap_cmd, session.test_mode)
 
             try:

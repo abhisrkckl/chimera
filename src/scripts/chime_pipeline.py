@@ -110,7 +110,7 @@ if __name__ == "__main__":
                 log.error(f"Error reading file {ftscr_file}. Skipping file.")
                 execution_summary[pulsar.name]["num_files_processfail"] += 1
                 continue
-            
+
             update_fits_header(ftscr_file, 2)
 
             if session.clean_files:
@@ -191,4 +191,3 @@ if __name__ == "__main__":
 
     # Write out a summary in JSON format.
     create_exec_summary_file(session, execution_summary)
-    

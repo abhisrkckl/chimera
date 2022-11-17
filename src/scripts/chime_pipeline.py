@@ -5,8 +5,8 @@ import traceback
 
 from astropy import log
 
-from exec import create_exec_summary_file, run_cmd, update_fits_header
-from fileutils import (
+from chime_pipeline.exec import create_exec_summary_file, run_cmd, update_fits_header
+from chime_pipeline.fileutils import (
     get_file_prefix,
     get_final_output_filename,
     get_ftscr_filename,
@@ -14,9 +14,9 @@ from fileutils import (
     get_pzap_filename,
     get_zap_filename,
 )
-from session import Session
-from toautils import create_toas, remove_toa_file, validate_toa_file
-from validation import test_input_file
+from chime_pipeline.session import Session
+from chime_pipeline.toautils import create_toas, remove_toa_file, validate_toa_file
+from chime_pipeline.validation import test_input_file
 
 if __name__ == "__main__":
 

@@ -5,7 +5,7 @@ from glob import glob
 
 from astropy import log
 
-from validation import test_dir, test_input_file, test_read_dir
+from .validation import test_dir, test_input_file, test_read_dir
 
 
 class PulsarConfig:

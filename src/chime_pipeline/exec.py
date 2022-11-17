@@ -5,7 +5,7 @@ import sys
 from astropy import log
 from astropy.io import fits
 
-from session import Session
+from .session import Session
 
 
 def run_cmd(cmd: str, test_mode: bool):

@@ -13,3 +13,6 @@
 *.tim
 chime_pipeline_summary*.json
 .vscode/*
+build/*
+dist/*
+*.egg-info/*

@@ -48,8 +48,8 @@ The processing steps are as follows:
 
 It is best to install chimera in a conda environment. This can be done as follows:
 
-    $ conda create --name chime-psr python=3.10
-    $ conda activate chime-psr
+    $ conda create --name chimera python=3.10
+    $ conda activate chimera
     $ conda install -c conda-forge astropy loguru psrchive pint-pulsar
     $ pip install git+https://github.com/pennucci/PulsePortraiture.git
     $ pip install git+https://github.com/abhisrkckl/chimera.git

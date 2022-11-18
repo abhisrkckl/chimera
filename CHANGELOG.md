@@ -46,3 +46,7 @@
  - Skip post-scrunch zapping if no channels are flagged (zap_chans)
  - `--clean` option to remove intermediate files.
  - Update FITS headers (PL_CMD and PL_LVL)
+
+ 18 Nov 2022
+ - Convert into an installable python package.
+ - Use loguru instead of astropy.logging 

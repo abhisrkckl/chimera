@@ -1,9 +1,9 @@
-# chime_pipeline
-Create wideband TOAs from CHIME pulsar observations (fold mode data).
+# chimera
+Create wideband TOAs from CHIME pulsar observations (fold mode data). CHIMERA stands for The CHIME Reduction Algorithm.
 
 ## Usage
 
-`chime_pipeline.py [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r] [--skip_pzap] [--skip_toagen] [-C]`
+`chimerawb [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r] [--skip_pzap] [--skip_toagen] [-C]`
 
 | Option                                    | Description                                                   |  
 |-------------------------------------------|---------------------------------------------------------------|

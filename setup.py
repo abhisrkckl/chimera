@@ -10,7 +10,7 @@ setup(
     license="GNU GPL v3",
     packages=["chime_pipeline"],
     package_dir={"chime_pipeline": "chime_pipeline"},
-    scripts=["scripts/chime2wbtoa.py", "scripts/chime_convert_and_tfzap.psh"],
+    scripts=["scripts/chimerawb", "scripts/chime_convert_and_tfzap.psh"],
     install_requires=[
         "astropy",
         "pint-pulsar",

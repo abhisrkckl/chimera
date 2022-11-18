@@ -1,6 +1,6 @@
 import os
 
-from astropy import log
+from loguru import logger as log
 
 
 def test_read_dir(folder, ok=True):

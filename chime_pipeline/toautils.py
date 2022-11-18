@@ -1,6 +1,6 @@
 import os
 
-from astropy import log
+from loguru import logger as log
 from pint.toa import get_TOAs
 from pplib import write_TOAs
 from pptoas import GetTOAs

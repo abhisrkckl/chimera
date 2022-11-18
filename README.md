@@ -46,11 +46,11 @@ The processing steps are as follows:
 
 ## Installation
 
-It is best to install chimera in a conda environment. This can be done as follows:
-
-    $ conda create --name chime-psr python=3.10
-    $ conda activate chime-psr
-    $ conda install -c conda-forge astropy loguru psrchive pint-pulsar
+1. Install `astropy`, `loguru` and `PINT`
+    $ pip install astropy loguru pint-pulsar
+2. Install `psrchive` (See https://psrchive.sourceforge.net/download.shtml for instructions)
+3. Install `PulsePortraiture`
     $ pip install git+https://github.com/pennucci/PulsePortraiture.git
+4. Install `chimera`    
     $ pip install git+https://github.com/abhisrkckl/chimera.git
 

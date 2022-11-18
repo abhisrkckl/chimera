@@ -3,6 +3,10 @@
 import os
 import time
 import traceback
+import getpass
+import platform
+import datetime
+import importlib_metadata
 
 from loguru import logger as log
 
@@ -21,7 +25,13 @@ from chime_pipeline.validation import test_input_file
 
 if __name__ == "__main__":
 
-    execution_summary = dict()
+    execution_summary = {
+        "user" : getpass.getuser(),
+        "host" : platform.node(),
+        "os" : platform.platform(),
+        "version" : importlib_metadata.version("chime-pipeline"),
+        "start_time" : datetime.datetime.now().isoformat(),
+    }
 
     session = Session()
 
@@ -86,8 +96,8 @@ if __name__ == "__main__":
             # 2. Run RFI excision
             # 3. Convert from Timer to PSRFITS format
             zap_cmd = f"chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
-            retcode, exectime = run_cmd(zap_cmd, session.test_mode)
-            log.info(f"Execution time for Level 0 -> 1 = {exectime} s")
+            retcode, exectime_01 = run_cmd(zap_cmd, session.test_mode)
+            log.info(f"Execution time for Level 0 -> 1 = {exectime_01} s")
 
             try:
                 zap_file = get_zap_filename(session, prefix)
@@ -101,8 +111,8 @@ if __name__ == "__main__":
 
             # Scrunch in Frequency and Time, Update DM
             scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {zap_file}"
-            retcode, exectime = run_cmd(scr_cmd, session.test_mode)
-            log.info(f"Execution time for Level 1 -> 2 = {exectime} s")
+            retcode, exectime_12 = run_cmd(scr_cmd, session.test_mode)
+            log.info(f"Execution time for Level 1 -> 2 = {exectime_12} s")
 
             try:
                 ftscr_file = get_ftscr_filename(session, prefix)
@@ -123,8 +133,8 @@ if __name__ == "__main__":
                 # This will need to be unique for each pulsar.
                 zap_chans_str = " ".join(map(str, pulsar.zap_chans))
                 pzap_cmd = f'paz -z "{zap_chans_str}" -e pzap -O {session.output_dir} {ftscr_file}'
-                retcode, exectime = run_cmd(pzap_cmd, session.test_mode)
-                log.info(f"Execution time for Level 2 -> 3 = {exectime} s")
+                retcode, exectime_23 = run_cmd(pzap_cmd, session.test_mode)
+                log.info(f"Execution time for Level 2 -> 3 = {exectime_23} s")
 
                 try:
                     pzap_file = get_pzap_filename(session, prefix)
@@ -148,12 +158,16 @@ if __name__ == "__main__":
                     "Skipping post-scrunch zapping step because no channels were flagged for zapping (zap_chans)."
                 )
                 assert ftscr_file == final_output_file
+                exectime_23 = 0
             else:
                 log.info("Skipping post-scrunch zapping step. (--skip_pzap)")
                 assert ftscr_file == final_output_file
+                exectime_23 = 0
 
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
+            
+            execution_summary[pulsar.name]["exec_time"] = exectime_01 + exectime_12 + exectime_23
 
         if not session.skip_toagen and len(pulsar.template) > 0:
             start = time.time()
@@ -185,7 +199,12 @@ if __name__ == "__main__":
             )
             validate_toa_file(session, pulsar, num_toas_expected)
 
-            log.info(f"Execution time for TOA generation = {end-start} s")
+            exectime_toagen = end-start
+            log.info(f"Execution time for TOA generation = {exectime_toagen} s")
+
+            execution_summary[pulsar.name]["exec_time_toagen"] = exectime_toagen
+            execution_summary[pulsar.name]["ntoas"] = num_toas_expected
+
 
         elif len(pulsar.template) == 0:
             log.warning(

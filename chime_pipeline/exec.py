@@ -28,7 +28,7 @@ def run_cmd(cmd: str, test_mode: bool):
 def create_exec_summary_file(session: Session, exec_summary: dict):
     """Create an execution summary file."""
     with open(f"{session.output_dir}/chime_pipeline_summary.json", "w") as summary_file:
-        json.dump(exec_summary, summary_file)
+        json.dump(exec_summary, summary_file, indent=4)
 
 
 def update_fits_header(filename: str, level: int):

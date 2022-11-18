@@ -10,8 +10,8 @@ import importlib_metadata
 
 from loguru import logger as log
 
-from chime_pipeline.exec import create_exec_summary_file, run_cmd, update_fits_header
-from chime_pipeline.fileutils import (
+from chimerawb.exec import create_exec_summary_file, run_cmd, update_fits_header
+from chimerawb.fileutils import (
     get_file_prefix,
     get_final_output_filename,
     get_ftscr_filename,
@@ -19,9 +19,9 @@ from chime_pipeline.fileutils import (
     get_pzap_filename,
     get_zap_filename,
 )
-from chime_pipeline.session import Session
-from chime_pipeline.toautils import create_toas, remove_toa_file, validate_toa_file
-from chime_pipeline.validation import test_input_file
+from chimerawb.session import Session
+from chimerawb.toautils import create_toas, remove_toa_file, validate_toa_file
+from chimerawb.validation import test_input_file
 
 if __name__ == "__main__":
 

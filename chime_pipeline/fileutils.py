@@ -1,7 +1,7 @@
 import os
 from glob import glob
 
-from session import PulsarConfig, Session
+from .session import PulsarConfig, Session
 
 
 def get_input_ar_files(session: Session, pulsar: PulsarConfig):

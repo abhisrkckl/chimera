@@ -2,7 +2,7 @@ import json
 from subprocess import Popen
 import sys
 
-from astropy import log
+from loguru import logger as log
 from astropy.io import fits
 
 from .session import Session

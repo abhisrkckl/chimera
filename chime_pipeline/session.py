@@ -3,7 +3,7 @@ import json
 import os
 from glob import glob
 
-from astropy import log
+from loguru import logger as log
 
 from .validation import test_dir, test_input_file, test_read_dir
 

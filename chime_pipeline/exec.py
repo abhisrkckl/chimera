@@ -1,6 +1,7 @@
 import json
 from subprocess import Popen
 import sys
+import time
 
 from loguru import logger as log
 from astropy.io import fits
@@ -13,9 +14,11 @@ def run_cmd(cmd: str, test_mode: bool):
     try:
         log.info(f"RUN $ {cmd}")
         if not test_mode:
+            start = time.time()
             p = Popen(cmd, shell=True)
             p.wait()
-            return p.returncode
+            end = time.time()
+            return p.returncode, end-start
         return "skip"
     except:
         log.error(f"Error while executing command. cmd :: {cmd}")

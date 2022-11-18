@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import time
 import traceback
 
 from loguru import logger as log
@@ -85,7 +86,8 @@ if __name__ == "__main__":
             # 2. Run RFI excision
             # 3. Convert from Timer to PSRFITS format
             zap_cmd = f"chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
-            run_cmd(zap_cmd, session.test_mode)
+            retcode, exectime = run_cmd(zap_cmd, session.test_mode)
+            log.info(f"Execution time for Level 0 -> 1 = {exectime} s")
 
             try:
                 zap_file = get_zap_filename(session, prefix)
@@ -99,7 +101,8 @@ if __name__ == "__main__":
 
             # Scrunch in Frequency and Time, Update DM
             scr_cmd = f"pam -e ftscr -u {session.output_dir} --setnchn {pulsar.nchan} --setnsub {pulsar.nsub} -d {pulsar.dm} {zap_file}"
-            run_cmd(scr_cmd, session.test_mode)
+            retcode, exectime = run_cmd(scr_cmd, session.test_mode)
+            log.info(f"Execution time for Level 1 -> 2 = {exectime} s")
 
             try:
                 ftscr_file = get_ftscr_filename(session, prefix)
@@ -120,7 +123,8 @@ if __name__ == "__main__":
                 # This will need to be unique for each pulsar.
                 zap_chans_str = " ".join(map(str, pulsar.zap_chans))
                 pzap_cmd = f'paz -z "{zap_chans_str}" -e pzap -O {session.output_dir} {ftscr_file}'
-                run_cmd(pzap_cmd, session.test_mode)
+                retcode, exectime = run_cmd(pzap_cmd, session.test_mode)
+                log.info(f"Execution time for Level 2 -> 3 = {exectime} s")
 
                 try:
                     pzap_file = get_pzap_filename(session, prefix)
@@ -152,12 +156,14 @@ if __name__ == "__main__":
             execution_summary[pulsar.name]["num_files_success"] += 1
 
         if not session.skip_toagen and len(pulsar.template) > 0:
+            start = time.time()
+
             # Recreate the TOA file. Any existing TOA file will be rewritten.
             # Skip files for which the TOA generation fails.
             remove_toa_file(session, pulsar)
             for toa_input_file in input_files_for_toas:
                 try:
-                    create_toas(session, pulsar, toa_input_file)
+                    exectime = create_toas(session, pulsar, toa_input_file)
                 except Exception as err:
                     log.error(
                         f"Failed to create TOA for {toa_input_file}. Skipping file."
@@ -166,6 +172,8 @@ if __name__ == "__main__":
                     traceback.print_tb(err.__traceback__)
                     execution_summary[pulsar.name]["num_files_toafail"] += 1
                     continue
+            
+            end = time.time()
 
             # Validate TOA file
             # -- Can it be read using PINT?
@@ -176,6 +184,9 @@ if __name__ == "__main__":
                 - execution_summary[pulsar.name]["num_files_toafail"]
             )
             validate_toa_file(session, pulsar, num_toas_expected)
+
+            log.info(f"Execution time for TOA generation = {end-start} s")
+
         elif len(pulsar.template) == 0:
             log.warning(
                 "Skipping TOA generation because the template file is not specified."

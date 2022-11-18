@@ -29,7 +29,7 @@ if __name__ == "__main__":
         "user" : getpass.getuser(),
         "host" : platform.node(),
         "os" : platform.platform(),
-        "version" : importlib_metadata.version("chime-pipeline"),
+        "version" : importlib_metadata.version("chimera-pulsar"),
         "start_time" : datetime.datetime.now().isoformat(),
     }
 

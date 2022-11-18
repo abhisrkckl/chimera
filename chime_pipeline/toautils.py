@@ -5,7 +5,7 @@ from pint.toa import get_TOAs
 from pplib import write_TOAs
 from pptoas import GetTOAs
 
-from session import PulsarConfig, Session
+from .session import PulsarConfig, Session
 
 
 def get_tim_filename(session: Session, pulsar: PulsarConfig):

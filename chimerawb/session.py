@@ -5,7 +5,7 @@ from glob import glob
 
 from loguru import logger as log
 
-from .validation import test_dir, test_input_file, test_read_dir
+from .validation import test_dir, test_input_file, test_read_dir, check_command
 
 
 class PulsarConfig:
@@ -118,6 +118,10 @@ class Session:
             help="Remove intermediate files.",
         )
         args = parser.parse_args()
+
+        required_cmds = ["psrsh", "psrchive", "pam", "paz", "chime_convert_and_tfzap.psh"]
+        for cmd in required_cmds:
+            check_command(cmd)
 
         self.input_dir = test_read_dir(os.path.realpath(args.input_dir))
         self.output_dir = test_dir(os.path.realpath(args.output_dir))

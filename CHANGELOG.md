@@ -52,3 +52,4 @@
  - Use loguru instead of astropy.logging 
  - More information in summary file
  - Rename package to chimera-pulsar and script to chimerawb
+ - Check required commands before starting the processing

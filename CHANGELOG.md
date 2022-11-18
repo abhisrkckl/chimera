@@ -50,3 +50,5 @@
  18 Nov 2022
  - Convert into an installable python package.
  - Use loguru instead of astropy.logging 
+ - More information in summary file
+ - Rename package to chimera-pulsar and script to chimerawb

@@ -13,6 +13,7 @@ setup(
     scripts=["scripts/chimerawb", "scripts/chime_convert_and_tfzap.psh"],
     install_requires=[
         "astropy",
+        "loguru",
         "pint-pulsar",
         "PulsePortraiture"
     ]

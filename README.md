@@ -48,15 +48,15 @@ The processing steps are as follows:
 
 1. Install `astropy`, `loguru` and `PINT`
     
-    $ pip install astropy loguru pint-pulsar
+    `$ pip install astropy loguru pint-pulsar`
 
 2. Install `psrchive` (See https://psrchive.sourceforge.net/download.shtml for instructions)
 
 3. Install `PulsePortraiture`
     
-    $ pip install git+https://github.com/pennucci/PulsePortraiture.git
+    `$ pip install git+https://github.com/pennucci/PulsePortraiture.git`
 
 4. Install `chimera`    
 
-    $ pip install git+https://github.com/abhisrkckl/chimera.git
+    `$ pip install git+https://github.com/abhisrkckl/chimera.git`
 

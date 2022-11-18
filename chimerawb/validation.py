@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from loguru import logger as log
 
@@ -37,3 +38,12 @@ def test_input_file(file_path, ok=True):
         log.info(f"File {file_path} OK. ")
 
     return file_path
+
+
+def check_command(cmd):
+    program_found = shutil.which(cmd) is not None
+    if program_found:
+        log.info(f"Command {cmd} OK.")
+    else:
+        raise OSError(f"Command {cmd} not found.")
+    return program_found

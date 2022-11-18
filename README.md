@@ -3,7 +3,7 @@ Create wideband TOAs from CHIME pulsar observations (fold mode data). CHIMERA st
 
 ## Usage
 
-`chimerawb [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r] [--skip_pzap] [--skip_toagen] [-C]`
+    $ chimerawb [-h] -i INPUT_DIR [-m METAFILE] -o OUTPUT_DIR -c CONFIG [-r] [--skip_pzap] [--skip_toagen] [-C]
 
 | Option                                    | Description                                                   |  
 |-------------------------------------------|---------------------------------------------------------------|

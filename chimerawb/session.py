@@ -24,7 +24,7 @@ class PulsarConfig:
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
-        self.datafile_glob_prefix = f"CHIME_{self.name}_beam_?_?????_?????"
+        self.datafile_glob_prefix = f"CHIME_{self.name}_beam_?_?????_*"
 
         self.validate()
 

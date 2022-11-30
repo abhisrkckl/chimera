@@ -54,3 +54,6 @@
  - Rename package to chimera-pulsar and script to chimerawb
  - Check required commands before starting the processing
  - Added installation instructions
+
+30 Nov 2020
+ - Changed datafile prefix to be more general

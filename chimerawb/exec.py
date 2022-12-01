@@ -18,7 +18,7 @@ def run_cmd(cmd: str, test_mode: bool):
             p = Popen(cmd, shell=True)
             p.wait()
             end = time.time()
-            return p.returncode, end-start
+            return p.returncode, end - start
         return "skip"
     except:
         log.error(f"Error while executing command. cmd :: {cmd}")
@@ -43,8 +43,11 @@ def update_fits_header(filename: str, level: int):
 
 def get_psrchive_version():
     try:
-        return check_output(["psrchive", "--version"]).decode("utf-8").strip()[len("psrchive "):]
+        return (
+            check_output(["psrchive", "--version"])
+            .decode("utf-8")
+            .strip()[len("psrchive ") :]
+        )
     except:
         log.warning("Unable to get PSRCHIVE version.")
         return "Unknown"
-

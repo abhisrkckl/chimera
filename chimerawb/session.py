@@ -119,7 +119,13 @@ class Session:
         )
         args = parser.parse_args()
 
-        required_cmds = ["psrsh", "psrchive", "pam", "paz", "chime_convert_and_tfzap.psh"]
+        required_cmds = [
+            "psrsh",
+            "psrchive",
+            "pam",
+            "paz",
+            "chime_convert_and_tfzap.psh",
+        ]
         for cmd in required_cmds:
             check_command(cmd)
 

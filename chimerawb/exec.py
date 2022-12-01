@@ -1,5 +1,5 @@
 import json
-from subprocess import Popen
+from subprocess import Popen, check_output
 import sys
 import time
 
@@ -39,3 +39,12 @@ def update_fits_header(filename: str, level: int):
         log.info(f"Updated FITS header for {filename}.")
     except:
         log.error(f"Failed to update FITS header for {filename}.")
+
+
+def get_psrchive_version():
+    try:
+        return check_output(["psrchive", "--version"]).decode("utf-8").strip()[len("psrchive "):]
+    except:
+        log.warning("Unable to get PSRCHIVE version.")
+        return "Unknown"
+

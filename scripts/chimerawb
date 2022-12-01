@@ -8,9 +8,11 @@ import platform
 import datetime
 import importlib_metadata
 
-from loguru import logger as log
+from loguru import logger as log, __version__ as loguru_version
+from astropy import __version__ as astropy_version
+from numpy import __version__ as numpy_version
 
-from chimerawb.exec import create_exec_summary_file, run_cmd, update_fits_header
+from chimerawb.exec import create_exec_summary_file, run_cmd, update_fits_header, get_psrchive_version
 from chimerawb.fileutils import (
     get_file_prefix,
     get_final_output_filename,
@@ -31,6 +33,13 @@ if __name__ == "__main__":
         "os" : platform.platform(),
         "version" : importlib_metadata.version("chimera-pulsar"),
         "start_time" : datetime.datetime.now().isoformat(),
+        "version_info" : {
+            "psrchive" : get_psrchive_version(),
+            "numpy" : numpy_version,
+            "astropy" : astropy_version,
+            "loguru" : loguru_version,
+            "pulseportraiture" : "Unknown"
+        }
     }
 
     session = Session()

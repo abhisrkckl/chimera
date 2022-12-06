@@ -1,20 +1,7 @@
 from setuptools import setup
+import versioneer
 
 setup(
-    name="chimera-pulsar",
-    version="0.1.0",
-    description="A pipeline to generate wideband TOAs from CHIME fold mode data.",
-    author="Abhimanyu Susobhanan, Gabriella Agazie, David Kaplan",
-    author_email="abhimanyu.susobhanan@nanograv.org",
-    url="https://github.com/abhisrkckl/chime_pipeline",
-    license="GNU GPL v3",
-    packages=["chimerawb"],
-    package_dir={"chimerawb": "chimerawb"},
+    version=versioneer.get_version(), cmdclass=versioneer.get_cmdclass(),
     scripts=["scripts/chimerawb", "scripts/chime_convert_and_tfzap.psh"],
-    install_requires=[
-        "astropy",
-        "loguru",
-        "pint-pulsar",
-        "PulsePortraiture"
-    ]
 )

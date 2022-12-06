@@ -8,9 +8,18 @@ import platform
 import datetime
 import importlib_metadata
 
-from loguru import logger as log
+from loguru import logger as log, __version__ as loguru_version
+from astropy import __version__ as astropy_version
+from numpy import __version__ as numpy_version
+from chimerawb import __version__ as chimera_version
+from pint import __version__ as pint_version
 
-from chimerawb.exec import create_exec_summary_file, run_cmd, update_fits_header
+from chimerawb.exec import (
+    create_exec_summary_file,
+    run_cmd,
+    update_fits_header,
+    get_psrchive_version,
+)
 from chimerawb.fileutils import (
     get_file_prefix,
     get_final_output_filename,
@@ -26,11 +35,20 @@ from chimerawb.validation import test_input_file
 if __name__ == "__main__":
 
     execution_summary = {
-        "user" : getpass.getuser(),
-        "host" : platform.node(),
-        "os" : platform.platform(),
-        "version" : importlib_metadata.version("chimera-pulsar"),
-        "start_time" : datetime.datetime.now().isoformat(),
+        "user": getpass.getuser(),
+        "host": platform.node(),
+        "os": platform.platform(),
+        "version": importlib_metadata.version("chimera-pulsar"),
+        "start_time": datetime.datetime.now().isoformat(),
+        "version_info": {
+            "chimera" : chimera_version,
+            "psrchive": get_psrchive_version(),
+            "numpy": numpy_version,
+            "astropy": astropy_version,
+            "loguru": loguru_version,
+            "PulsePortraiture": "Unknown",
+            "PINT" : pint_version,
+        },
     }
 
     session = Session()
@@ -64,13 +82,15 @@ if __name__ == "__main__":
             prefix = get_file_prefix(ar_file)
 
             # Skip the file if it is not in the input metafile if the input metafile is given.
-            if session.input_metafile is not None:
-                if ar_file not in session.input_file_names:
-                    log.info(
-                        f"--- Skipping {prefix} ... Not included in the input metafile. ---"
-                    )
-                    execution_summary[pulsar.name]["num_files_skip_meta"] += 1
-                    continue
+            if (
+                session.input_metafile is not None
+                and ar_file not in session.input_file_names
+            ):
+                log.info(
+                    f"--- Skipping {prefix} ... Not included in the input metafile. ---"
+                )
+                execution_summary[pulsar.name]["num_files_skip_meta"] += 1
+                continue
 
             # Skip the file if it has already been processed (except when the --reprocess option is given).
             final_output_file = get_final_output_filename(session, pulsar, prefix)
@@ -95,7 +115,9 @@ if __name__ == "__main__":
             # 1. Convert coherence mode data to Stokes mode.
             # 2. Run RFI excision
             # 3. Convert from Timer to PSRFITS format
-            zap_cmd = f"chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
+            zap_cmd = (
+                f"chime_convert_and_tfzap.psh -e zap -O {session.output_dir} {ar_file}"
+            )
             retcode, exectime_01 = run_cmd(zap_cmd, session.test_mode)
             log.info(f"Execution time for Level 0 -> 1 = {exectime_01} s")
 
@@ -166,8 +188,10 @@ if __name__ == "__main__":
 
             input_files_for_toas.append(final_output_file)
             execution_summary[pulsar.name]["num_files_success"] += 1
-            
-            execution_summary[pulsar.name]["exec_time"] = exectime_01 + exectime_12 + exectime_23
+
+            execution_summary[pulsar.name]["exec_time"] = (
+                exectime_01 + exectime_12 + exectime_23
+            )
 
         if not session.skip_toagen and len(pulsar.template) > 0:
             start = time.time()
@@ -186,7 +210,7 @@ if __name__ == "__main__":
                     traceback.print_tb(err.__traceback__)
                     execution_summary[pulsar.name]["num_files_toafail"] += 1
                     continue
-            
+
             end = time.time()
 
             # Validate TOA file
@@ -199,12 +223,11 @@ if __name__ == "__main__":
             )
             validate_toa_file(session, pulsar, num_toas_expected)
 
-            exectime_toagen = end-start
+            exectime_toagen = end - start
             log.info(f"Execution time for TOA generation = {exectime_toagen} s")
 
             execution_summary[pulsar.name]["exec_time_toagen"] = exectime_toagen
             execution_summary[pulsar.name]["ntoas"] = num_toas_expected
-
 
         elif len(pulsar.template) == 0:
             log.warning(

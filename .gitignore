@@ -16,3 +16,4 @@ chime_pipeline_summary*.json
 build/*
 dist/*
 *.egg-info/*
+*.swp

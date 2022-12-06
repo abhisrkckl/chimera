@@ -6,6 +6,7 @@ from glob import glob
 from loguru import logger as log
 
 from .validation import test_dir, test_input_file, test_read_dir, check_command
+from ._version import get_versions
 
 
 class PulsarConfig:
@@ -20,7 +21,7 @@ class PulsarConfig:
     ):
         self.name = name
         self.dm = dm
-        self.template = test_input_file(template) if len(template) > 0 else template
+        self.template = test_input_file(template) if template != "" else template
         self.nchan = nchan
         self.nsub = nsub
         self.zap_chans = zap_chans
@@ -58,6 +59,7 @@ class Session:
         parser = argparse.ArgumentParser(
             description="Generate TOAs from fold mode CHIME data."
         )
+        parser.add_argument('--version', action='version', version=get_versions()["version"])
         parser.add_argument(
             "-i",
             "--input_dir",
@@ -137,7 +139,7 @@ class Session:
             self.input_metafile = test_input_file(os.path.realpath(args.metafile))
             with open(self.input_metafile, "r") as metafile:
                 self.input_file_names = []
-                for f in metafile.readlines():
+                for f in metafile:
                     f_full = test_input_file(f"{self.input_dir}/{f.strip()}")
                     self.input_file_names.append(f_full)
         else:

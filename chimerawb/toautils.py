@@ -38,5 +38,5 @@ def validate_toa_file(session: Session, pulsar: PulsarConfig, num_toas_expected:
         toas = get_TOAs(timfile)
         assert len(toas) == num_toas_expected
         log.info(f"Successfully created {timfile}.")
-    except:
+    except Exception:
         log.error(f"Unable to validate {timfile}.")

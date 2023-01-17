@@ -20,7 +20,7 @@ def run_cmd(cmd: str, test_mode: bool):
             end = time.time()
             return p.returncode, end - start
         return "skip"
-    except:
+    except Exception:
         log.error(f"Error while executing command. cmd :: {cmd}")
         return "error"
 
@@ -37,7 +37,7 @@ def update_fits_header(filename: str, level: int):
         fits.setval(filename, "PL_CMD", value=cmd)
         fits.setval(filename, "PL_LVL", value=level)
         log.info(f"Updated FITS header for {filename}.")
-    except:
+    except Exception:
         log.error(f"Failed to update FITS header for {filename}.")
 
 
@@ -48,6 +48,6 @@ def get_psrchive_version():
             .decode("utf-8")
             .strip()[len("psrchive ") :]
         )
-    except:
+    except Exception:
         log.warning("Unable to get PSRCHIVE version.")
         return "Unknown"

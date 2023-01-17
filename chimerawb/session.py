@@ -59,7 +59,9 @@ class Session:
         parser = argparse.ArgumentParser(
             description="Generate TOAs from fold mode CHIME data."
         )
-        parser.add_argument('--version', action='version', version=get_versions()["version"])
+        parser.add_argument(
+            "--version", action="version", version=get_versions()["version"]
+        )
         parser.add_argument(
             "-i",
             "--input_dir",

@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 
+import datetime
+import getpass
 import os
+import platform
 import time
 import traceback
-import getpass
-import platform
-import datetime
-import importlib_metadata
 
-from loguru import logger as log, __version__ as loguru_version
+import importlib_metadata
 from astropy import __version__ as astropy_version
+from loguru import __version__ as loguru_version
+from loguru import logger as log
 from numpy import __version__ as numpy_version
-from chimerawb import __version__ as chimera_version
 from pint import __version__ as pint_version
 
+from chimerawb import __version__ as chimera_version
 from chimerawb.exec import (
     create_exec_summary_file,
+    get_psrchive_version,
     run_cmd,
     update_fits_header,
-    get_psrchive_version,
 )
 from chimerawb.fileutils import (
     get_file_prefix,
@@ -41,13 +42,13 @@ if __name__ == "__main__":
         "version": importlib_metadata.version("chimera-pulsar"),
         "start_time": datetime.datetime.now().isoformat(),
         "version_info": {
-            "chimera" : chimera_version,
+            "chimera": chimera_version,
             "psrchive": get_psrchive_version(),
             "numpy": numpy_version,
             "astropy": astropy_version,
             "loguru": loguru_version,
             "PulsePortraiture": "Unknown",
-            "PINT" : pint_version,
+            "PINT": pint_version,
         },
     }
 

@@ -13,10 +13,9 @@ jobs:
       with:
         auto-update-conda: true
         python-version: 3.9
-      run: |
-        conda info
     - name: Install dependencies
       run: |
+        conda info
         pip install git+https://github.com/pennucci/PulsePortraiture.git
         $CONDA/bin/conda install -c conda-forge psrchive pint-pulsar
         pip install . 

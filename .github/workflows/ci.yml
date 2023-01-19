@@ -14,9 +14,8 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
         pip install git+https://github.com/pennucci/PulsePortraiture.git
-        conda install -c conda-forge psrchive pint-pulsar
+        $CONDA/bin/conda install -c conda-forge psrchive pint-pulsar
         pip install . 
         python -c "import chimerawb; print(f'chimera {chimerawb.__version__}')"
     - name: Lint with flake8

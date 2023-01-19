@@ -1,6 +1,6 @@
 import os
 
-from chimerawb.validation import test_read_dir as validate_read_dir
+# from chimerawb.validation import test_read_dir as validate_read_dir
 
 def test_validate_read_dir(tmpdir):
     pass 

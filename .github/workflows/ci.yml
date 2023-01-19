@@ -15,6 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
+        pip install git+https://github.com/pennucci/PulsePortraiture.git
         pip install . 
         conda --version
     - name: Lint with flake8

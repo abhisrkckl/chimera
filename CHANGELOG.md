@@ -55,5 +55,8 @@
  - Check required commands before starting the processing
  - Added installation instructions
 
-30 Nov 2020
+30 Nov 2022
  - Changed datafile prefix to be more general
+
+27 Mar 2026
+ - Update citation
